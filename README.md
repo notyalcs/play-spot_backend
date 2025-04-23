@@ -10,11 +10,14 @@ play-spot_backend/
 │
 ├── PlaySpotApi/
 │   ├── Data/
-│   │   └── PlaySpotDbContext.cs
+│       └── PlaySpotDbContext.cs
+│       └── ...
 │   ├── Models/
-│   │   └── VenueItem.cs
+│       └── VenueItem.cs
+│       └── ...
 │   ├── Controllers/
-│   │   └── WeatherForecastController.cs
+│       └── WeatherForecastController.cs
+│       └── ...
 │   ├── Program.cs
 │   ├── Startup.cs (if applicable)
 │   ├── PlaySpotApi.csproj
