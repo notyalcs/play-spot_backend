@@ -1,0 +1,76 @@
+# Ignore build outputs
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Visual Studio Code
+.vscode/
+.vscode/*
+
+# Dependency directories
+node_modules/
+packages/
+
+# Environment variables
+.env
+.env.*
+
+# Database files
+*.mdf
+*.ldf
+*.db
+
+# Entity Framework migrations
+Migrations/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.swp
+*.tmp
+*.temp
+
+# Compiled files
+*.dll
+*.exe
+*.pdb
+*.cache
+*.zip
+
+# Rider IDE files
+.idea/
+*.iml
+
+# JetBrains Rider
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Render deployment files (if not needed in the repo)
+# render.yaml
+
+# Ignore test results
+TestResults/
+
+# Ignore coverage reports
+coverage/
+*.coverage
+*.coveragexml
+*.codecov
+
+# Ignore GitHub Actions workflows cache
+.github/workflows/*.cache

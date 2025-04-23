@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using PlaySpotApi.Data;
+using PlaySpotApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<PlaySpotDbContext>(options =>
+    options.UseSqlite("Data Source=PlaySpot.db"));
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -13,6 +20,21 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapGet("/", () => "Welcome to PlaySpot API!")
+    .WithName("GetRoot")
+    .WithOpenApi()
+    .Produces<string>(StatusCodes.Status200OK);
+
+app.MapGet("/venues", async (PlaySpotDbContext db) =>
+{
+    var venues = await db.VenueItems.ToListAsync();
+    return venues;
+})
+.WithName("GetVenues")
+    .WithOpenApi()
+    .Produces<List<VenueItem>>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status500InternalServerError);
 
 var summaries = new[]
 {
