@@ -3,10 +3,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /App
 
+# Install the .NET EF Core tool
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
 # Copy the project files to the container
 COPY . ./
-RUN dotnet restore PlaySpotApi.sln
-RUN dotnet publish PlaySpotApi.sln -c Release -o out
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
 
 # Use the official .NET runtime image to run the application
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime

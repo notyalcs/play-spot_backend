@@ -31,7 +31,7 @@ packages/
 *.db
 
 # Entity Framework migrations
-Migrations/
+# Migrations/
 
 # OS-specific files
 .DS_Store

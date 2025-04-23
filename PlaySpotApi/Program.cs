@@ -5,7 +5,7 @@ using PlaySpotApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PlaySpotDbContext>(options =>
-    options.UseSqlite("Data Source=PlaySpot.db"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
