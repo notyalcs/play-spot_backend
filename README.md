@@ -2,24 +2,31 @@
 
 Approximate repo structure:
 ```bash
-MyApiRepo/
+play-spot_backend/
 │
 ├── .github/
 │   └── workflows/
 │       └── test-and-deploy.yml       # GitHub Actions workflow
 │
-├── MyApi/
-│   ├── Controllers/
-│   │   └── WeatherForecastController.cs
+├── PlaySpotApi/
+│   └── Data/
+│       ├── PlaySpotDbContext.cs
+│       ├── ...
+│   └── Models/
+│       ├── VenueItem.cs
+│       ├── ...
+│   └── Controllers/
+│       ├── WeatherForecastController.cs
+│       ├── ...
 │   ├── Program.cs
 │   ├── Startup.cs (if applicable)
-│   ├── MyApi.csproj
-│   └── ...
+│   ├── PlaySpotApi.csproj
+│   ├── ...
 │
-├── MyApi.Tests/
-│   ├── SampleTests.cs                # Basic xUnit test
-│   └── MyApi.Tests.csproj
+├── PlaySpotApi.Tests/
+│   ├── SampleVenueTests.cs                # Basic xUnit test
+│   ├── PlaySpotApi.Tests.csproj
 │
-├── MyApiRepo.sln                     # Solution file
+├── PlaySpotBackend.sln                     # Solution file
 ├── render.yaml                       # Optional: Render deployment config
-└── README.md```
+├── README.md```
