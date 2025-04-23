@@ -18,7 +18,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=playspotdb;Username=postgres;Password=password
     ports:
-      - "8000:80"
+      - "8080:80"
     depends_on:
       - db
 
