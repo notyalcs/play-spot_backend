@@ -4,8 +4,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /App
 
 # Install the .NET EF Core tool
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="${PATH}:/root/.dotnet/tools"
+# RUN dotnet tool install --global dotnet-ef
+# ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # Copy the project files to the container
 COPY . ./

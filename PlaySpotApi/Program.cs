@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using PlaySpotApi.Data;
 using PlaySpotApi.Models;
@@ -13,15 +14,22 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<PlaySpotDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Welcome to PlaySpot API!")
+app.MapGet("/", () => "Welcome to PlaySpot API! This is a test.")
     .WithName("GetRoot")
     .WithOpenApi()
     .Produces<string>(StatusCodes.Status200OK);
@@ -34,6 +42,18 @@ app.MapGet("/venues", async (PlaySpotDbContext db) =>
 .WithName("GetVenues")
     .WithOpenApi()
     .Produces<List<VenueItem>>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status500InternalServerError);
+
+app.MapPost("/venues", async (PlaySpotDbContext db, VenueItem venue) =>
+{
+    db.VenueItems.Add(venue);
+    await db.SaveChangesAsync();
+    return Results.Created($"/venues/{venue.Id}", venue);
+})
+.WithName("CreateVenue")
+    .WithOpenApi()
+    .Produces<VenueItem>(StatusCodes.Status201Created)
+    .Produces(StatusCodes.Status400BadRequest)
     .Produces(StatusCodes.Status500InternalServerError);
 
 var summaries = new[]

@@ -1,6 +1,0 @@
-@PlaySpotApi_HostAddress = http://localhost:5102
-
-GET {{PlaySpotApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
