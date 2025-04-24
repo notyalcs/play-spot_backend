@@ -1,4 +1,4 @@
-name: Build, Migrate, and Test
+name: Build and Test PlaySpot Backend
 
 on:
   push:
@@ -21,17 +21,11 @@ jobs:
           with:
             dotnet-version: '9.x'
 
-        - name: Install EF Core CLI tools
-          run: dotnet tool install --global dotnet-ef
-
         - name: Restore dependencies
           run: dotnet restore
 
         - name: Build solution
           run: dotnet build --configuration Release --no-restore
-
-        - name: Run migrations
-          run: dotnet ef database update --project PlaySpotApi/PlaySpotApi.csproj
 
         - name: Run tests
           run: dotnet test --configuration Release --no-build --verbosity normal
