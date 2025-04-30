@@ -42,8 +42,8 @@ play-spot_backend/
 │   └── Models/
 │       ├── VenueItem.cs
 │       ├── ...
-│   └── Controllers/
-│       ├── WeatherForecastController.cs
+│   └── Routes/
+│       ├── LocationRoutes.cs
 │       ├── ...
 │   ├── Program.cs
 │   ├── PlaySpotApi.csproj
