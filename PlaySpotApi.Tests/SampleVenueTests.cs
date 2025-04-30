@@ -5,16 +5,16 @@ namespace PlaySpotApi.Tests;
 public class SampleVenueTests
 {
     [Fact]
-    public void CanCreateVenueItem()
+    public void CanCreateLocation()
     {
-        var item = new VenueItem
+        var location = new Location
         {
-            Id = 0,
+            LocationId = 0,
             Name = "Sample Venue",
             Address = "123 Sample St, Sample City, SC 12345",
-            Sports = new List<string> { "Soccer", "Basketball" }
-        };
+            Coordinates = "34.0522,-118.2437"
+        }; 
 
-        Assert.Equal(0, item.Id);
+        Assert.Equal(0, location.LocationId);
     }
 }

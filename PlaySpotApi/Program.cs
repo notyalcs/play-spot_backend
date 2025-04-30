@@ -15,8 +15,22 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<PlaySpotDbContext>();
-    // dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
+    
+    if (app.Environment.IsDevelopment())
+    {
+        // dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
+    }
+
+    // Comment out the raw SQL execution if you want to keep the database schema and data.
+    dbContext.Database.ExecuteSqlRaw(@"
+        DO $$ DECLARE
+            r RECORD;
+        BEGIN
+            EXECUTE 'DROP SCHEMA public CASCADE';
+            EXECUTE 'CREATE SCHEMA public';
+        END $$;");
     dbContext.Database.Migrate();
+
     SeedData.SeedDatabase(dbContext); // Seed the database with initial data
 }
 
