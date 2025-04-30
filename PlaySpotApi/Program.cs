@@ -15,7 +15,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<PlaySpotDbContext>();
-    dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
+    // dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
     dbContext.Database.Migrate();
     SeedData.SeedDatabase(dbContext); // Seed the database with initial data
 }
