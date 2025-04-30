@@ -22,13 +22,14 @@ using (var scope = app.Services.CreateScope())
     }
 
     // Comment out the raw SQL execution if you want to keep the database schema and data.
-    dbContext.Database.ExecuteSqlRaw(@"
-        DO $$ DECLARE
-            r RECORD;
-        BEGIN
-            EXECUTE 'DROP SCHEMA public CASCADE';
-            EXECUTE 'CREATE SCHEMA public';
-        END $$;");
+    // dbContext.Database.ExecuteSqlRaw(@"
+    //     DO $$ DECLARE
+    //         r RECORD;
+    //     BEGIN
+    //         EXECUTE 'DROP SCHEMA public CASCADE';
+    //         EXECUTE 'CREATE SCHEMA public';
+    //     END $$;");
+
     dbContext.Database.Migrate();
 
     SeedData.SeedDatabase(dbContext); // Seed the database with initial data
