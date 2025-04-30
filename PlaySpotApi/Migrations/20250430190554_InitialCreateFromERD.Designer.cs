@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlaySpotApi.Data;
@@ -11,9 +12,11 @@ using PlaySpotApi.Data;
 namespace PlaySpotApi.Migrations
 {
     [DbContext(typeof(PlaySpotDbContext))]
-    partial class PlaySpotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430190554_InitialCreateFromERD")]
+    partial class InitialCreateFromERD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,15 +1,13 @@
 using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using PlaySpotApi.Data;
-using PlaySpotApi.Models;
+using PlaySpotApi.Routes;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PlaySpotDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -17,44 +15,26 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<PlaySpotDbContext>();
+    dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
     dbContext.Database.Migrate();
+    SeedData.SeedDatabase(dbContext); // Seed the database with initial data
 }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(); // This is at http://localhost:5102/scalar/v1 when running locally
 }
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Welcome to PlaySpot API! This is a test.")
-    .WithName("GetRoot")
+app.MapGet("/health", () => Results.Ok("Healthy"))
+    .WithName("GetHealth")
     .WithOpenApi()
     .Produces<string>(StatusCodes.Status200OK);
 
-app.MapGet("/venues", async (PlaySpotDbContext db) =>
-{
-    var venues = await db.VenueItems.ToListAsync();
-    return venues;
-})
-.WithName("GetVenues")
-    .WithOpenApi()
-    .Produces<List<VenueItem>>(StatusCodes.Status200OK)
-    .Produces(StatusCodes.Status500InternalServerError);
-
-app.MapPost("/venues", async (PlaySpotDbContext db, VenueItem venue) =>
-{
-    db.VenueItems.Add(venue);
-    await db.SaveChangesAsync();
-    return Results.Created($"/venues/{venue.Id}", venue);
-})
-.WithName("CreateVenue")
-    .WithOpenApi()
-    .Produces<VenueItem>(StatusCodes.Status201Created)
-    .Produces(StatusCodes.Status400BadRequest)
-    .Produces(StatusCodes.Status500InternalServerError);
-
+app.MapLocationRoutes();
+app.MapLocationActivityRoutes();
 
 app.Run();

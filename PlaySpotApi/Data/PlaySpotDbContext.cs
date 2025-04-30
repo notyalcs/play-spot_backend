@@ -5,24 +5,31 @@ namespace PlaySpotApi.Data
 {
     public class PlaySpotDbContext : DbContext
     {
-        public PlaySpotDbContext(DbContextOptions<PlaySpotDbContext> options) : base(options)
-        {
-        }
+        public PlaySpotDbContext(DbContextOptions<PlaySpotDbContext> options) : base(options) { }
 
-        public DbSet<VenueItem> VenueItems { get; set; } // DbSet for VenueItem
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Sport> Sports { get; set; }
+        public DbSet<LocationSport> LocationSports { get; set; }
+        public DbSet<LocationActivity> LocationActivities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Optional: Configure VenueItem table (e.g., table name, constraints)
-            modelBuilder.Entity<VenueItem>(entity =>
-            {
-                entity.ToTable("VenueItems"); // Table name in the database
-                entity.HasKey(v => v.Id); // Primary key
-                entity.Property(v => v.Name).HasMaxLength(100); // Optional: Limit Name length
-                entity.Property(v => v.Address).HasMaxLength(200); // Optional: Limit Location length
-            });
+            // Composite key for LocationSport
+            modelBuilder.Entity<LocationSport>()
+                .HasKey(ls => new { ls.LocationId, ls.SportId });
+
+            // Configuring the relationships for LocationSport
+            modelBuilder.Entity<LocationSport>()
+                .HasOne(ls => ls.Location)
+                .WithMany(l => l.LocationSports)
+                .HasForeignKey(ls => ls.LocationId);
+
+            modelBuilder.Entity<LocationSport>()
+                .HasOne(ls => ls.Sport)
+                .WithMany(s => s.LocationSports)
+                .HasForeignKey(ls => ls.SportId);
         }
     }
 }
