@@ -49,7 +49,9 @@ app.MapGet("/health", () => Results.Ok("Healthy"))
     .WithOpenApi()
     .Produces<string>(StatusCodes.Status200OK);
 
-app.MapLocationRoutes();
+var locationGroup = app.MapGroup("/locations");
+locationGroup.MapLocationRoutes();
+
 app.MapLocationActivityRoutes();
 
 app.Run();

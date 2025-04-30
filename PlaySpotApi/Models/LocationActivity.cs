@@ -16,7 +16,7 @@ namespace PlaySpotApi.Models
         public int LocationId { get; set; }
         public Location? Location { get; set; } // Navigation property to the Location entity
 
-        public DateTime dateTime { get; set; } // Date and time of the activity
+        public DateTime DateTime { get; set; } // Date and time of the activity
         public FullnessLevel FullnessLevel { get; set; } // Fullness level of the location during the activity
     }
 }
