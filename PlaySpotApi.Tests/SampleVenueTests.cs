@@ -17,4 +17,18 @@ public class SampleVenueTests
 
         Assert.Equal(0, location.LocationId);
     }
+
+    [Fact]
+    public void CanCreateLocationActivity()
+    {
+        var locationActivity = new LocationActivity
+        {
+            LocationActivityId = 0,
+            LocationId = 1,
+            dateTime = DateTime.Now,
+            FullnessLevel = FullnessLevel.Available
+        };
+
+        Assert.Equal(0, locationActivity.LocationActivityId);
+    }
 }
