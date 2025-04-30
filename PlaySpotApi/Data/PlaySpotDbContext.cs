@@ -27,7 +27,9 @@ namespace PlaySpotApi.Data
                 .HasForeignKey(ls => ls.LocationId);
 
             modelBuilder.Entity<LocationSport>()
-                .HasOne(ls => ls.Sport);
+                .HasOne(ls => ls.Sport)
+                .WithMany()
+                .HasForeignKey(ls => ls.SportId);
         }
     }
 }
