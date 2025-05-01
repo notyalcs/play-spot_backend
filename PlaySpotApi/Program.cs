@@ -59,6 +59,5 @@ var locationGroup = app.MapGroup("/locations");
 locationGroup.MapLocationRoutes();
 
 app.MapLocationActivityRoutes();
-app.MapLocationSportRoutes();
 
 app.Run();

@@ -22,17 +22,17 @@ namespace PlaySpotApi.Data
             var broadview = new Location { LocationId = 3, Name = "Broadview Park", Address = "3955 Canada Wy, Burnaby, BC V5G 1C3", Coordinates = "49.25552736455759, -123.01618148991702" };
             var centralPark = new Location { LocationId = 4, Name = "Central Park", Address = "3883 Imperial St, Burnaby, BC V5J 1A3", Coordinates = "49.227936228186806, -123.01799296037849" };
 
-            var locationSport1 = new LocationSport { LocationId = 1, Location = bcit, SportId = 1, Sport = tennis };
-            var locationSport2 = new LocationSport { LocationId = 1, Location = bcit, SportId = 2, Sport = tableTennis };
-            var locationSport3 = new LocationSport { LocationId = 1, Location = bcit, SportId = 3, Sport = soccer };
-            var locationSport4 = new LocationSport { LocationId = 1, Location = bcit, SportId = 4, Sport = basketball };
-            var locationSport5 = new LocationSport { LocationId = 2, Location = burnabyLake, SportId = 1, Sport = tennis };
-            var locationSport6 = new LocationSport { LocationId = 2, Location = burnabyLake, SportId = 3, Sport = soccer };
-            var locationSport7 = new LocationSport { LocationId = 3, Location = broadview, SportId = 1, Sport = tennis };
-            var locationSport8 = new LocationSport { LocationId = 3, Location = broadview, SportId = 4, Sport = basketball };
-            var locationSport9 = new LocationSport { LocationId = 4, Location = centralPark, SportId = 1, Sport = tennis };
-            var locationSport10 = new LocationSport { LocationId = 4, Location = centralPark, SportId = 2, Sport = tableTennis };
-            var locationSport11 = new LocationSport { LocationId = 4, Location = centralPark, SportId = 4, Sport = basketball };
+            // var locationSport1 = new LocationSport { LocationId = 1, Location = bcit, SportId = 1, Sport = tennis };
+            // var locationSport2 = new LocationSport { LocationId = 1, Location = bcit, SportId = 2, Sport = tableTennis };
+            // var locationSport3 = new LocationSport { LocationId = 1, Location = bcit, SportId = 3, Sport = soccer };
+            // var locationSport4 = new LocationSport { LocationId = 1, Location = bcit, SportId = 4, Sport = basketball };
+            // var locationSport5 = new LocationSport { LocationId = 2, Location = burnabyLake, SportId = 1, Sport = tennis };
+            // var locationSport6 = new LocationSport { LocationId = 2, Location = burnabyLake, SportId = 3, Sport = soccer };
+            // var locationSport7 = new LocationSport { LocationId = 3, Location = broadview, SportId = 1, Sport = tennis };
+            // var locationSport8 = new LocationSport { LocationId = 3, Location = broadview, SportId = 4, Sport = basketball };
+            // var locationSport9 = new LocationSport { LocationId = 4, Location = centralPark, SportId = 1, Sport = tennis };
+            // var locationSport10 = new LocationSport { LocationId = 4, Location = centralPark, SportId = 2, Sport = tableTennis };
+            // var locationSport11 = new LocationSport { LocationId = 4, Location = centralPark, SportId = 4, Sport = basketball };
 
             var locationActivity1 = new LocationActivity { LocationActivityId = 1, LocationId = 1, Location = bcit, DateTime = DateTime.SpecifyKind(new DateTime(2025, 05, 1, 1, 30, 0), DateTimeKind.Utc), FullnessLevel = FullnessLevel.Available };
             var locationActivity2 = new LocationActivity { LocationActivityId = 2, LocationId = 1, Location = bcit, DateTime = DateTime.SpecifyKind(new DateTime(2025, 05, 1, 0, 30, 0), DateTimeKind.Utc), FullnessLevel = FullnessLevel.Moderate };
@@ -40,20 +40,35 @@ namespace PlaySpotApi.Data
             var locationActivity4 = new LocationActivity { LocationActivityId = 4, LocationId = 3, Location = broadview, DateTime = DateTime.SpecifyKind(new DateTime(2025, 05, 1, 0, 45, 0), DateTimeKind.Utc), FullnessLevel = FullnessLevel.Full };
             var locationActivity5 = new LocationActivity { LocationActivityId = 5, LocationId = 4, Location = centralPark, DateTime = DateTime.SpecifyKind(new DateTime(2025, 05, 1, 1, 0, 0), DateTimeKind.Utc), FullnessLevel = FullnessLevel.Closed };
 
-            bcit.LocationSports.Add(locationSport1);
-            bcit.LocationSports.Add(locationSport2);
-            bcit.LocationSports.Add(locationSport3);
-            bcit.LocationSports.Add(locationSport4);
+            bcit.Sports.Add(tennis);
+            bcit.Sports.Add(tableTennis);
+            bcit.Sports.Add(soccer);
+            bcit.Sports.Add(basketball);
+
+            burnabyLake.Sports.Add(tennis);
+            burnabyLake.Sports.Add(soccer);
+
+            broadview.Sports.Add(tennis);
+            broadview.Sports.Add(basketball);
+
+            centralPark.Sports.Add(tennis);
+            centralPark.Sports.Add(tableTennis);
+            centralPark.Sports.Add(basketball);
+
+            // bcit.LocationSports.Add(locationSport1);
+            // bcit.LocationSports.Add(locationSport2);
+            // bcit.LocationSports.Add(locationSport3);
+            // bcit.LocationSports.Add(locationSport4);
             // bcit.LocationSports = new List<LocationSport> { locationSport1, locationSport2, locationSport3, locationSport4 };
-            burnabyLake.LocationSports.Add(locationSport5);
-            burnabyLake.LocationSports.Add(locationSport6);
+            // burnabyLake.LocationSports.Add(locationSport5);
+            // burnabyLake.LocationSports.Add(locationSport6);
             // burnabyLake.LocationSports = new List<LocationSport> { locationSport5, locationSport6 };
-            broadview.LocationSports.Add(locationSport7);
-            broadview.LocationSports.Add(locationSport8);
+            // broadview.LocationSports.Add(locationSport7);
+            // broadview.LocationSports.Add(locationSport8);
             // broadview.LocationSports = new List<LocationSport> { locationSport7, locationSport8 };
-            centralPark.LocationSports.Add(locationSport9);
-            centralPark.LocationSports.Add(locationSport10);
-            centralPark.LocationSports.Add(locationSport11);
+            // centralPark.LocationSports.Add(locationSport9);
+            // centralPark.LocationSports.Add(locationSport10);
+            // centralPark.LocationSports.Add(locationSport11);
             // centralPark.LocationSports = new List<LocationSport> { locationSport9, locationSport10, locationSport11 };
 
             bcit.LocationActivities.Add(locationActivity1);
@@ -67,7 +82,7 @@ namespace PlaySpotApi.Data
             // centralPark.LocationActivities = new List<LocationActivity> { locationActivity5 };
 
             context.LocationActivities.AddRange(locationActivity1, locationActivity2, locationActivity3, locationActivity4, locationActivity5);
-            context.LocationSports.AddRange(locationSport1, locationSport2, locationSport3, locationSport4, locationSport5, locationSport6, locationSport7, locationSport8, locationSport9, locationSport10, locationSport11);
+            // context.LocationSports.AddRange(locationSport1, locationSport2, locationSport3, locationSport4, locationSport5, locationSport6, locationSport7, locationSport8, locationSport9, locationSport10, locationSport11);
             context.Locations.AddRange(bcit, burnabyLake, broadview, centralPark);
             context.Sports.AddRange(tennis, tableTennis, soccer, basketball);
 

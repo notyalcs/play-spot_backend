@@ -35,12 +35,17 @@ namespace PlaySpotApi.Routes
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
 
-            group.MapGet("/by-sport", async (PlaySpotDbContext db, string sport) =>
+            group.MapGet("/by-sport/{sportName}", async (PlaySpotDbContext db, string sportName) =>
             {
                 var locations = await db.Locations
-                    .Include(l => l.LocationSports)
-                    .ThenInclude(ls => ls.Sport)
-                    .Where(l => l.LocationSports.Any(ls => ls.Sport.Name == sport))
+                    .Where(l => l.Sports.Any(s => s.Name == sportName))
+                    .Select(l => new {
+                        l.LocationId,
+                        l.Name,
+                        l.Address,
+                        l.Coordinates,
+                        Sports = l.Sports.Select(s => new { s.SportId, s.Name }).ToList()
+                    })
                     .ToListAsync();
 
                 return Results.Ok(locations);
