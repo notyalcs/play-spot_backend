@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlaySpotApi.Data;
@@ -11,9 +12,11 @@ using PlaySpotApi.Data;
 namespace PlaySpotApi.Migrations
 {
     [DbContext(typeof(PlaySpotDbContext))]
-    partial class PlaySpotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430212435_AddRequiredToFields")]
+    partial class AddRequiredToFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,6 +71,21 @@ namespace PlaySpotApi.Migrations
                     b.ToTable("LocationActivities");
                 });
 
+            modelBuilder.Entity("PlaySpotApi.Models.LocationSport", b =>
+                {
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SportId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LocationId", "SportId");
+
+                    b.HasIndex("SportId");
+
+                    b.ToTable("LocationSports");
+                });
+
             modelBuilder.Entity("PlaySpotApi.Models.Sport", b =>
                 {
                     b.Property<int>("SportId")
@@ -82,16 +100,11 @@ namespace PlaySpotApi.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("SportId");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("Sports");
                 });
@@ -107,18 +120,30 @@ namespace PlaySpotApi.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("PlaySpotApi.Models.Sport", b =>
+            modelBuilder.Entity("PlaySpotApi.Models.LocationSport", b =>
                 {
-                    b.HasOne("PlaySpotApi.Models.Location", null)
-                        .WithMany("Sports")
-                        .HasForeignKey("LocationId");
+                    b.HasOne("PlaySpotApi.Models.Location", "Location")
+                        .WithMany("LocationSports")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PlaySpotApi.Models.Sport", "Sport")
+                        .WithMany()
+                        .HasForeignKey("SportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Sport");
                 });
 
             modelBuilder.Entity("PlaySpotApi.Models.Location", b =>
                 {
                     b.Navigation("LocationActivities");
 
-                    b.Navigation("Sports");
+                    b.Navigation("LocationSports");
                 });
 #pragma warning restore 612, 618
         }

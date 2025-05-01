@@ -9,27 +9,16 @@ namespace PlaySpotApi.Data
 
         public DbSet<Location> Locations { get; set; }
         public DbSet<Sport> Sports { get; set; }
-        public DbSet<LocationSport> LocationSports { get; set; }
         public DbSet<LocationActivity> LocationActivities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Composite key for LocationSport
-            modelBuilder.Entity<LocationSport>()
-                .HasKey(ls => new { ls.LocationId, ls.SportId });
-
-            // Configuring the relationships for LocationSport
-            modelBuilder.Entity<LocationSport>()
-                .HasOne(ls => ls.Location)
-                .WithMany(l => l.LocationSports)
-                .HasForeignKey(ls => ls.LocationId);
-
-            modelBuilder.Entity<LocationSport>()
-                .HasOne(ls => ls.Sport)
-                .WithMany(s => s.LocationSports)
-                .HasForeignKey(ls => ls.SportId);
+            modelBuilder.Entity<LocationActivity>()
+                .HasOne(la => la.Location)
+                .WithMany(l => l.LocationActivities)
+                .HasForeignKey(la => la.LocationId);
         }
     }
 }

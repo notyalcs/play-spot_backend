@@ -2,11 +2,17 @@ using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using PlaySpotApi.Data;
 using PlaySpotApi.Routes;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PlaySpotDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 
 builder.Services.AddOpenApi();
 
@@ -18,7 +24,7 @@ using (var scope = app.Services.CreateScope())
     
     if (app.Environment.IsDevelopment())
     {
-        // dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
+        dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
     }
 
     // Comment out the raw SQL execution if you want to keep the database schema and data.
@@ -49,7 +55,9 @@ app.MapGet("/health", () => Results.Ok("Healthy"))
     .WithOpenApi()
     .Produces<string>(StatusCodes.Status200OK);
 
-app.MapLocationRoutes();
+var locationGroup = app.MapGroup("/locations");
+locationGroup.MapLocationRoutes();
+
 app.MapLocationActivityRoutes();
 
 app.Run();

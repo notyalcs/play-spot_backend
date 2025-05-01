@@ -10,11 +10,13 @@ namespace PlaySpotApi.Routes
 {
     public static class LocationRoutes
     {
-        public static IEndpointRouteBuilder MapLocationRoutes(this IEndpointRouteBuilder routes)
+        public static RouteGroupBuilder MapLocationRoutes(this RouteGroupBuilder group)
         {
-            routes.MapGet("/locations", async (PlaySpotDbContext db) =>
+            group.MapGet("/", async (PlaySpotDbContext db) =>
             {
-                var locations = await db.Locations.ToListAsync();
+                var locations = await db.Locations
+                    .Include(l => l.Sports)
+                    .ToListAsync();
 
                 return Results.Ok(locations);
             })
@@ -23,7 +25,7 @@ namespace PlaySpotApi.Routes
             .Produces<List<Location>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status500InternalServerError);
 
-            routes.MapPost("/locations", async (PlaySpotDbContext db, Location location) =>
+            group.MapPost("/create", async (PlaySpotDbContext db, Location location) =>
             {
                 db.Locations.Add(location);
                 await db.SaveChangesAsync();
@@ -35,7 +37,28 @@ namespace PlaySpotApi.Routes
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
 
-            return routes;
+            group.MapGet("/by-sport/{sportName}", async (PlaySpotDbContext db, string sportName) =>
+            {
+                var locations = await db.Locations
+                    .Include(l => l.Sports)
+                    .Where(l => l.Sports.Any(s => s.Name.ToLower() == sportName.ToLower()))
+                    .Select(l => new {
+                        l.LocationId,
+                        l.Name,
+                        l.Address,
+                        l.Coordinates,
+                        Sports = l.Sports.Select(s => new { s.SportId, s.Name }).ToList()
+                    })
+                    .ToListAsync();
+
+                return Results.Ok(locations);
+            })
+            .WithName("GetLocationsBySport")
+            .WithOpenApi()
+            .Produces<List<Location>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+            return group;
         }
     }
 }

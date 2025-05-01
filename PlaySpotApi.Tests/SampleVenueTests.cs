@@ -25,7 +25,7 @@ public class SampleVenueTests
         {
             LocationActivityId = 0,
             LocationId = 1,
-            dateTime = DateTime.Now,
+            DateTime = DateTime.Now,
             FullnessLevel = FullnessLevel.Available
         };
 
