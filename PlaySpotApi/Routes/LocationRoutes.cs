@@ -14,7 +14,9 @@ namespace PlaySpotApi.Routes
         {
             group.MapGet("/", async (PlaySpotDbContext db) =>
             {
-                var locations = await db.Locations.ToListAsync();
+                var locations = await db.Locations
+                    .Include(l => l.Sports)
+                    .ToListAsync();
 
                 return Results.Ok(locations);
             })
@@ -38,7 +40,8 @@ namespace PlaySpotApi.Routes
             group.MapGet("/by-sport/{sportName}", async (PlaySpotDbContext db, string sportName) =>
             {
                 var locations = await db.Locations
-                    .Where(l => l.Sports.Any(s => s.Name == sportName))
+                    .Include(l => l.Sports)
+                    .Where(l => l.Sports.Any(s => s.Name.ToLower() == sportName.ToLower()))
                     .Select(l => new {
                         l.LocationId,
                         l.Name,
