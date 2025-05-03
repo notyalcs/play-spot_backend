@@ -3,6 +3,22 @@
 
 set -e
 
+cleanup() {
+    echo "Stopping and removing Postgres container..."
+    docker rm -f play-spot_postgres || true
+
+    # Uncomment the following line if you want to remove the persistent volume
+    # echo "(Optional) Removing persistent volume..."
+    # docker volume rm pgdata || true
+
+    echo ""
+    echo "Development environment cleaned up."
+    read -n 1 -s -r -p "Press any key to exit..."
+    echo ""
+}
+
+trap cleanup EXIT
+
 # Start Postgres via Docker
 echo "Starting Postgres..."
 docker run --name play-spot_postgres \

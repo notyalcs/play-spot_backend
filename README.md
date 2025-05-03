@@ -13,9 +13,9 @@
         - You can see API endpoints built from OpenAPI and Scalar at:
             - `http://localhost:5102/scalar/v1`
 - To STOP the database and dotnet app:
-    - run `cleanup.sh`
-        - This will remove the docker container (not volume)
-    - also stop the `dev.sh` script (easiest is just `CTRL+C`)
+    - OLD: ~~run `cleanup.sh`~~
+        - ~~This will remove the docker container (not volume)~~
+    - Just stop the `dev.sh` script (easiest is just `CTRL+C`)
 
 ### Notes
 - The scripts aren't mandatory, you should be able to start things however you want, this was just convenient IMO.
