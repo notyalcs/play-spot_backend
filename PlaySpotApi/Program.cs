@@ -38,7 +38,10 @@ using (var scope = app.Services.CreateScope())
         //     END $$;");
     }
 
-    dbContext.Database.Migrate();
+    if (dbContext.Database.IsRelational())
+    {
+        dbContext.Database.Migrate();
+    }
 
     SeedData.SeedDatabase(dbContext); // Seed the database with initial data
 }
@@ -63,3 +66,5 @@ locationGroup.MapLocationRoutes();
 app.MapLocationActivityRoutes();
 
 app.Run();
+
+public partial class Program { }
