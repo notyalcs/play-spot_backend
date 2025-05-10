@@ -24,4 +24,27 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
         Assert.NotNull(locations);
         Assert.NotEmpty(locations);
     }
+
+    //this test returns the location that are within a given radius 
+    [Fact]
+    public async Task GetLocationsBySportAndRadius_ReturnsFilteredLocations()
+    {
+        // Arrange
+        string sportName = "Basketball";
+        string coordinates = "49.24889950936577, -123.00379792501597"; // e.g., Vancouver downtown
+        double radius = 10.0; // in kilometers
+
+        var url = $"/locations/locations-by-sport?sportName={sportName}&coordinates={coordinates}&radius={radius}";
+
+
+        // Act
+        var response = await _client.GetAsync(url);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var locations = await response.Content.ReadFromJsonAsync<List<object>>();
+
+        Assert.NotNull(locations);
+        Assert.NotEmpty(locations);
+    }
 }

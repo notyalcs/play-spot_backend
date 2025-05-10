@@ -24,8 +24,6 @@ namespace PlaySpotApi.Routes
             .Produces<List<string>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status500InternalServerError);
 
-
-
             return group;
         }
     }

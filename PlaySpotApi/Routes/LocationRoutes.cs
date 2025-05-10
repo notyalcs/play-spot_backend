@@ -60,8 +60,10 @@ namespace PlaySpotApi.Routes
             .Produces(StatusCodes.Status404NotFound);
 
 
+
+            //Aaryan
             //this get request returns all the locations for a given sport with a specified radius.
-            group.MapGet("/locations-by-sport-", async (
+            group.MapGet("/locations-by-sport", async (
                 string sportName,
                 string coordinates,   
                 double radius,        // in km
@@ -99,6 +101,9 @@ namespace PlaySpotApi.Routes
                 var withinRadius = new List<object>();
                 foreach (var loc in all)
                 {
+                    if (string.IsNullOrWhiteSpace(loc.Coordinates))
+                        continue; // skip null or empty
+
                     var parts = loc.Coordinates
                         .Split(',', StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length != 2
