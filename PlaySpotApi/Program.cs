@@ -21,13 +21,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", " https://play-spot-five.vercel.app/")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:5173",               // for local dev
+            "https://play-spot-five.vercel.app"         // for deployed frontend
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
+
 builder.Services.AddControllers();
-var app = builder.Build();
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -63,6 +67,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(); // This is at http://localhost:5102/scalar/v1 when running locally
 }
+var app = builder.Build();
+
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthorization();
