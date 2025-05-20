@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 using PlaySpotApi.Data;
@@ -11,12 +12,40 @@ namespace PlaySpotApi.Routes
     {
         public static RouteGroupBuilder MapLocationRoutes(this RouteGroupBuilder group)
         {
-            group.MapGet("/", async (PlaySpotDbContext db) =>
+            group.MapGet("/", async ([AsParameters] LocationQuery query, PlaySpotDbContext db) =>
             {
-                var locations = await db.Locations
-                    .Include(l => l.Sports)
-                    .ToListAsync();
+                var results = new List<ValidationResult>();
+                var context = new ValidationContext(query);
+                if (!Validator.TryValidateObject(query, context, results, true))
+                {
+                    return Results.BadRequest(results);
+                }
 
+                var locationsQuery = db.Locations
+                    .Include(l => l.Sports)
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(query.SportName))
+                {
+                    locationsQuery = locationsQuery
+                        .Where(l => l.Sports.Any(s => s.Name.ToLower() == query.SportName.ToLower()));
+                }
+
+                if (query.Latitude.HasValue && query.Longitude.HasValue)
+                {
+                    var filtered = await locationsQuery.ToListAsync();
+                    // TODO: Make the calculation inline so SQL can handle it if data set is large
+                    filtered = filtered
+                        .Where(L => GeoHelper.IsWithinRadius(
+                            query.Latitude.Value, query.Longitude.Value,
+                            L.Latitude, L.Longitude,
+                            query.Radius ?? 10))
+                        .ToList();
+                    
+                    return Results.Ok(filtered);
+                }
+
+                var locations = await locationsQuery.ToListAsync();
                 return Results.Ok(locations);
             })
             .WithName("GetLocations")
@@ -37,100 +66,74 @@ namespace PlaySpotApi.Routes
             .Produces(StatusCodes.Status500InternalServerError);
 
 
-            //this get request returns all the locations for a given sport.
-            group.MapGet("/by-sport/{sportName}", async (PlaySpotDbContext db, string sportName) =>
-            {
-                var locations = await db.Locations
-                    .Include(l => l.Sports)
-                    .Where(l => l.Sports.Any(s => s.Name.ToLower() == sportName.ToLower()))
-                    .Select(l => new {
-                        l.LocationId,
-                        l.Name,
-                        l.Address,
-                        l.Coordinates,
-                        Sports = l.Sports.Select(s => new { s.SportId, s.Name }).ToList()
-                    })
-                    .ToListAsync();
+            // //Aaryan
+            // //this get request returns all the locations for a given sport with a specified radius.
+            // group.MapGet("/locations-by-sport", async (
+            //     string sportName,
+            //     string coordinates,   
+            //     double radius,        // in km
+            //     PlaySpotDbContext db) =>
+            // {
+            //     // 1) Parse the user's coordinates
+            //     var userParts = coordinates
+            //         .Split(',', StringSplitOptions.RemoveEmptyEntries);
+            //     if (userParts.Length != 2
+            //         || !double.TryParse(userParts[0], out var userLat)
+            //         || !double.TryParse(userParts[1], out var userLon))
+            //     {
+            //         return Results.BadRequest("Invalid 'coordinates' format. Use 'lat,lon'.");
+            //     }
 
-                return Results.Ok(locations);
-            })
-            .WithName("GetLocationsBySport")
-            .WithOpenApi()
-            .Produces<List<Location>>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound);
+            //     // 2) Fetch all locations that offer the sport
+            //     var all = await db.Locations
+            //         .Include(l => l.Sports)
+            //         .Where(l => l.Sports
+            //             .Any(s => s.Name
+            //                 .Equals(sportName, StringComparison.OrdinalIgnoreCase)))
+            //         .Select(l => new
+            //         {
+            //             l.LocationId,
+            //             l.Name,
+            //             l.Address,
+            //             l.Coordinates,   // still as "lat,lon"
+            //             Sports = l.Sports
+            //                 .Select(s => new { s.SportId, s.Name })
+            //                 .ToList()
+            //         })
+            //         .ToListAsync();
 
+            //     // 3) Parse each location's coords, filter by radius
+            //     var withinRadius = new List<object>();
+            //     foreach (var loc in all)
+            //     {
+            //         if (string.IsNullOrWhiteSpace(loc.Coordinates))
+            //             continue; // skip null or empty
 
+            //         var parts = loc.Coordinates
+            //             .Split(',', StringSplitOptions.RemoveEmptyEntries);
+            //         if (parts.Length != 2
+            //             || !double.TryParse(parts[0], out var lat)
+            //             || !double.TryParse(parts[1], out var lon))
+            //         {
+            //             continue; // skip malformed entry
+            //         }
 
-            //Aaryan
-            //this get request returns all the locations for a given sport with a specified radius.
-            group.MapGet("/locations-by-sport", async (
-                string sportName,
-                string coordinates,   
-                double radius,        // in km
-                PlaySpotDbContext db) =>
-            {
-                // 1) Parse the user's coordinates
-                var userParts = coordinates
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries);
-                if (userParts.Length != 2
-                    || !double.TryParse(userParts[0], out var userLat)
-                    || !double.TryParse(userParts[1], out var userLon))
-                {
-                    return Results.BadRequest("Invalid 'coordinates' format. Use 'lat,lon'.");
-                }
+            //         if (GeoHelper.IsWithinRadius(
+            //                 userLat, userLon,
+            //                 lat, lon,
+            //                 radius))
+            //         {
+            //             withinRadius.Add(loc);
+            //         }
+            //     }
 
-                // 2) Fetch all locations that offer the sport
-                var all = await db.Locations
-                    .Include(l => l.Sports)
-                    .Where(l => l.Sports
-                        .Any(s => s.Name
-                            .Equals(sportName, StringComparison.OrdinalIgnoreCase)))
-                    .Select(l => new
-                    {
-                        l.LocationId,
-                        l.Name,
-                        l.Address,
-                        l.Coordinates,   // still as "lat,lon"
-                        Sports = l.Sports
-                            .Select(s => new { s.SportId, s.Name })
-                            .ToList()
-                    })
-                    .ToListAsync();
-
-                // 3) Parse each location's coords, filter by radius
-                var withinRadius = new List<object>();
-                foreach (var loc in all)
-                {
-                    if (string.IsNullOrWhiteSpace(loc.Coordinates))
-                        continue; // skip null or empty
-
-                    var parts = loc.Coordinates
-                        .Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length != 2
-                        || !double.TryParse(parts[0], out var lat)
-                        || !double.TryParse(parts[1], out var lon))
-                    {
-                        continue; // skip malformed entry
-                    }
-
-                    if (GeoHelper.IsWithinRadius(
-                            userLat, userLon,
-                            lat, lon,
-                            radius))
-                    {
-                        withinRadius.Add(loc);
-                    }
-                }
-
-                // 4) Return only those within the radius
-                return Results.Ok(withinRadius);
-            })
-            .WithName("GetLocationsBySportAndRadius")
-            .WithOpenApi()
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest);
-
-
+            //     // 4) Return only those within the radius
+            //     return Results.Ok(withinRadius);
+            // })
+            // .WithName("GetLocationsBySportAndRadius")
+            // .WithOpenApi()
+            // .Produces(StatusCodes.Status200OK)
+            // .Produces(StatusCodes.Status400BadRequest);
 
             return group;
         }

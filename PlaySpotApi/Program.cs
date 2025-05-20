@@ -16,6 +16,17 @@ builder.Services.Configure<JsonOptions>(options =>
 
 builder.Services.AddOpenApi();
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", " https://play-spot-five.vercel.app/")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+builder.Services.AddControllers();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -24,7 +35,7 @@ using (var scope = app.Services.CreateScope())
     
     if (app.Environment.IsDevelopment())
     {
-        dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
+       dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
     }
     else
     {
@@ -52,8 +63,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(); // This is at http://localhost:5102/scalar/v1 when running locally
 }
-
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
 
 app.MapGet("/health", () => Results.Ok("Healthy"))
     .WithName("GetHealth")

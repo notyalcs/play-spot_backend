@@ -16,7 +16,7 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
     public async Task GetLocations_ReturnsOk()
     {
         // Act
-        var response = await _client.GetAsync("/locations/");
+        var response = await _client.GetAsync("/locations");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -30,12 +30,13 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
     public async Task GetLocationsBySportAndRadius_ReturnsFilteredLocations()
     {
         // Arrange
-        string sportName = "Basketball";
-        string coordinates = "49.24889950936577, -123.00379792501597"; // e.g., Vancouver downtown
-        double radius = 10.0; // in kilometers
+        var sportName = "Table Tennis";
+        // var coordinates = "49.24889950936577, -123.00379792501597"; // e.g., Vancouver downtown
+        var latitude = 49.252339;
+        var longitude = -122.987064;
+        var radius = 2.0; // in kilometers
 
-        var url = $"/locations/locations-by-sport?sportName={sportName}&coordinates={coordinates}&radius={radius}";
-
+        var url = $"/locations?sportName={sportName}&latitude={latitude}&longitude={longitude}&radius={radius}";
 
         // Act
         var response = await _client.GetAsync(url);
@@ -46,5 +47,37 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
 
         Assert.NotNull(locations);
         Assert.NotEmpty(locations);
+    }
+        
+    [Fact]
+    public async Task GetLocations_WithSportName_ReturnsFilteredLocations()
+    {
+        // Arrange
+        var sportName = "Soccer";
+
+        // Act
+        var response = await _client.GetAsync($"/locations?sportName={sportName}");
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var locations = await response.Content.ReadFromJsonAsync<List<Location>>();
+        Assert.NotNull(locations);
+        Assert.All(locations, l => Assert.Contains(sportName, l.Sports.Select(s => s.Name)));
+    }
+
+    [Fact]
+    public async Task GetLocations_WithLatitudeLongitude_ReturnsFilteredLocations()
+    {
+        // Arrange
+        var latitude =  49.24883642073071;
+        var longitude = -123.00085365852959;
+
+        // Act
+        var response = await _client.GetAsync($"/locations?latitude={latitude}&longitude={longitude}");
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var locations = await response.Content.ReadFromJsonAsync<List<Location>>();
+        Assert.NotNull(locations);
     }
 }

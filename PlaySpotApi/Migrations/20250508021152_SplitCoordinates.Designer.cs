@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlaySpotApi.Data;
@@ -11,9 +12,11 @@ using PlaySpotApi.Data;
 namespace PlaySpotApi.Migrations
 {
     [DbContext(typeof(PlaySpotDbContext))]
-    partial class PlaySpotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508021152_SplitCoordinates")]
+    partial class SplitCoordinates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,10 +36,10 @@ namespace PlaySpotApi.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
-                    b.Property<double>("Latitude")
+                    b.Property<double?>("Latitude")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Longitude")
+                    b.Property<double?>("Longitude")
                         .HasColumnType("double precision");
 
                     b.Property<string>("Name")
