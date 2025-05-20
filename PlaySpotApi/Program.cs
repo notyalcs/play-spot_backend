@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-
+var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -67,7 +67,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(); // This is at http://localhost:5102/scalar/v1 when running locally
 }
-var app = builder.Build();
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
