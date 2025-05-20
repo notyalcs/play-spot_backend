@@ -15,6 +15,10 @@ namespace PlaySpotApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Location>()
+                .HasMany(l => l.Sports)
+                .WithMany();
+
             modelBuilder.Entity<LocationActivity>()
                 .HasOne(la => la.Location)
                 .WithMany(l => l.LocationActivities)

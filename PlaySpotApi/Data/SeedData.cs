@@ -12,11 +12,18 @@ namespace PlaySpotApi.Data
                 return; // DB has been seeded
             }
 
-            // Sports
-            // var tennis = new Sport { Name = "Tennis", Description = "A racket sport that can be played individually against a single opponent or between two teams of two players each." };
-            // var tableTennis = new Sport { Name = "Table Tennis", Description = "A sport in which two or four players hit a lightweight ball, also known as a ping-pong ball, back and forth across a table using small solid rackets." };
-            // var soccer = new Sport { Name = "Soccer", Description = "A team sport played with a spherical ball between two teams of 11 players." };
-            // var basketball = new Sport { Name = "Basketball", Description = "A team sport in which two teams, most commonly of five players each, opposing one another on a rectangular court." };
+            var sports = new List<Sport>
+            {
+                new Sport { Name = "Tennis", Description = "A racket sport that can be played individually against a single opponent or between two teams of two players each." },
+                new Sport { Name = "Table Tennis", Description = "A sport in which two or four players hit a lightweight ball, also known as a ping-pong ball, back and forth across a table using small solid rackets." },
+                new Sport { Name = "Soccer", Description = "A team sport played with a spherical ball between two teams of 11 players." },
+                new Sport { Name = "Basketball", Description = "A team sport in which two teams, most commonly of five players each, opposing one another on a rectangular court." }
+            };
+
+            context.Sports.AddRange(sports);
+            context.SaveChanges();
+
+            var sportsDict = context.Sports.ToDictionary(s => s.Name, s => s);
 
             // Locations (with their Sports assigned)
             var bcit = new Location
@@ -28,10 +35,10 @@ namespace PlaySpotApi.Data
                 Longitude = -123.00085365852959,
                 Sports = new List<Sport> 
                 { 
-                    new Sport { Name = "Tennis", Description = "A racket sport that can be played individually against a single opponent or between two teams of two players each." },
-                    new Sport { Name = "Table Tennis", Description = "A sport in which two or four players hit a lightweight ball, also known as a ping-pong ball, back and forth across a table using small solid rackets." },
-                    new Sport { Name = "Soccer", Description = "A team sport played with a spherical ball between two teams of 11 players." },
-                    new Sport { Name = "Basketball", Description = "A team sport in which two teams, most commonly of five players each, opposing one another on a rectangular court." }
+                    sportsDict["Tennis"],
+                    sportsDict["Table Tennis"],
+                    sportsDict["Soccer"],
+                    sportsDict["Basketball"]
                 },
                 LocationActivities = new List<LocationActivity>
                 {
@@ -49,9 +56,9 @@ namespace PlaySpotApi.Data
                 Longitude = -122.96961053016025,
                 Sports = new List<Sport> 
                 { 
-                    new Sport { Name = "Tennis", Description = "A racket sport that can be played individually against a single opponent or between two teams of two players each." },
-                    new Sport { Name = "Soccer", Description = "A team sport played with a spherical ball between two teams of 11 players." },
-                    new Sport { Name = "Basketball", Description = "A team sport in which two teams, most commonly of five players each, opposing one another on a rectangular court." }
+                    sportsDict["Tennis"],
+                    sportsDict["Soccer"],
+                    sportsDict["Basketball"]
                 },
                 LocationActivities = new List<LocationActivity>
                 {
@@ -68,8 +75,8 @@ namespace PlaySpotApi.Data
                 Longitude = -123.01618148991702,
                 Sports = new List<Sport> 
                 {
-                    new Sport { Name = "Tennis", Description = "A racket sport that can be played individually against a single opponent or between two teams of two players each." },
-                    new Sport { Name = "Basketball", Description = "A team sport in which two teams, most commonly of five players each, opposing one another on a rectangular court." }
+                    sportsDict["Tennis"],
+                    sportsDict["Basketball"]
                 },
                 LocationActivities = new List<LocationActivity>
                 {
@@ -86,9 +93,9 @@ namespace PlaySpotApi.Data
                 Longitude = -123.01799296037849,
                 Sports = new List<Sport> 
                 {
-                    new Sport { Name = "Tennis", Description = "A racket sport that can be played individually against a single opponent or between two teams of two players each." },
-                    new Sport { Name = "Table Tennis", Description = "A sport in which two or four players hit a lightweight ball, also known as a ping-pong ball, back and forth across a table using small solid rackets." },
-                    new Sport { Name = "Basketball", Description = "A team sport in which two teams, most commonly of five players each, opposing one another on a rectangular court." }
+                    sportsDict["Tennis"],
+                    sportsDict["Table Tennis"],
+                    sportsDict["Basketball"]
                 },
                 LocationActivities = new List<LocationActivity>
                 {
