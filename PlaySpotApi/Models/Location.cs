@@ -9,6 +9,6 @@ namespace PlaySpotApi.Models
         public double Longitude { get; set; }
 
         public ICollection<Sport> Sports { get; set; } = new List<Sport>();
-        public ICollection<LocationActivity> LocationActivities { get; set; } = new List<LocationActivity>();
+        public ICollection<Fullness> Fullness { get; set; } = new List<Fullness>();
     }
 }

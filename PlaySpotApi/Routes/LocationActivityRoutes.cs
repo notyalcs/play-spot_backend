@@ -8,22 +8,22 @@ using PlaySpotApi.Models;
 
 namespace PlaySpotApi.Routes
 {
-    public static class LocationActivityRoutes
+    public static class FullnessRoutes
     {
-        public static IEndpointRouteBuilder MapLocationActivityRoutes(this IEndpointRouteBuilder routes)
+        public static RouteGroupBuilder MapFullnessRoutes(this RouteGroupBuilder group)
         {
-            routes.MapGet("/locationActivities", async (PlaySpotDbContext db) =>
-            {
-                var locations = await db.LocationActivities.ToListAsync();
+            // group.MapGet("/locationActivities", async (PlaySpotDbContext db) =>
+            // {
+            //     var locations = await db.LocationActivities.ToListAsync();
 
-                return Results.Ok(locations);
-            })
-            .WithName("GetLocationAvticities")
-            .WithOpenApi()
-            .Produces<List<LocationActivity>>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status500InternalServerError);
+            //     return Results.Ok(locations);
+            // })
+            // .WithName("GetLocationAvticities")
+            // .WithOpenApi()
+            // .Produces<List<LocationActivity>>(StatusCodes.Status200OK)
+            // .Produces(StatusCodes.Status500InternalServerError);
 
-            return routes;
+            return group;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace PlaySpotApi.Data
 
         public DbSet<Location> Locations { get; set; }
         public DbSet<Sport> Sports { get; set; }
-        public DbSet<LocationActivity> LocationActivities { get; set; }
+        public DbSet<Fullness> Fullness { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,10 +19,9 @@ namespace PlaySpotApi.Data
                 .HasMany(l => l.Sports)
                 .WithMany();
 
-            modelBuilder.Entity<LocationActivity>()
-                .HasOne(la => la.Location)
-                .WithMany(l => l.LocationActivities)
-                .HasForeignKey(la => la.LocationId);
+            modelBuilder.Entity<Fullness>()
+                .HasOne(f => f.Location)
+                .WithMany(l => l.Fullness);
         }
     }
 }

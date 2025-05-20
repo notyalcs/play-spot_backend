@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlaySpotApi.Data;
@@ -11,9 +12,11 @@ using PlaySpotApi.Data;
 namespace PlaySpotApi.Migrations
 {
     [DbContext(typeof(PlaySpotDbContext))]
-    partial class PlaySpotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250520040304_LocationActivityUpdate")]
+    partial class LocationActivityUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,30 +38,6 @@ namespace PlaySpotApi.Migrations
                     b.HasIndex("SportsSportId");
 
                     b.ToTable("LocationSport");
-                });
-
-            modelBuilder.Entity("PlaySpotApi.Models.Fullness", b =>
-                {
-                    b.Property<int>("FullnessId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FullnessId"));
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("FullnessLevel")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("FullnessId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("Fullness");
                 });
 
             modelBuilder.Entity("PlaySpotApi.Models.Location", b =>
@@ -84,6 +63,30 @@ namespace PlaySpotApi.Migrations
                     b.HasKey("LocationId");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("PlaySpotApi.Models.LocationActivity", b =>
+                {
+                    b.Property<int>("LocationActivityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LocationActivityId"));
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("FullnessLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LocationActivityId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("LocationActivities");
                 });
 
             modelBuilder.Entity("PlaySpotApi.Models.Sport", b =>
@@ -124,10 +127,10 @@ namespace PlaySpotApi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PlaySpotApi.Models.Fullness", b =>
+            modelBuilder.Entity("PlaySpotApi.Models.LocationActivity", b =>
                 {
                     b.HasOne("PlaySpotApi.Models.Location", "Location")
-                        .WithMany("Fullness")
+                        .WithMany("LocationActivities")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -137,7 +140,7 @@ namespace PlaySpotApi.Migrations
 
             modelBuilder.Entity("PlaySpotApi.Models.Location", b =>
                 {
-                    b.Navigation("Fullness");
+                    b.Navigation("LocationActivities");
                 });
 #pragma warning restore 612, 618
         }
