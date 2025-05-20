@@ -13,6 +13,6 @@ namespace PlaySpotApi.Models
         public double? Longitude { get; set; }
 
         [Range(0, 100)]
-        public int? Radius { get; set; } = 10;
+        public double? Radius { get; set; } = 10;
     }
 }

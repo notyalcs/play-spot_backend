@@ -35,7 +35,7 @@ using (var scope = app.Services.CreateScope())
     
     if (app.Environment.IsDevelopment())
     {
-       // dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
+       dbContext.Database.EnsureDeleted(); // Ensure the database is deleted. Comment this line if you want to keep the database.
     }
     else
     {
@@ -78,6 +78,9 @@ var locationGroup = app.MapGroup("/locations");
 locationGroup.MapLocationRoutes();
 
 app.MapLocationActivityRoutes();
+
+var sportGroup = app.MapGroup("/sports");
+sportGroup.MapSportRoutes();
 
 app.Run();
 

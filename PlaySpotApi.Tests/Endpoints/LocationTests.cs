@@ -25,6 +25,30 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
         Assert.NotEmpty(locations);
     }
 
+    //this test returns the location that are within a given radius 
+    [Fact]
+    public async Task GetLocationsBySportAndRadius_ReturnsFilteredLocations()
+    {
+        // Arrange
+        var sportName = "Table Tennis";
+        // var coordinates = "49.24889950936577, -123.00379792501597"; // e.g., Vancouver downtown
+        var latitude = 49.252339;
+        var longitude = -122.987064;
+        var radius = 2.0; // in kilometers
+
+        var url = $"/locations?sportName={sportName}&latitude={latitude}&longitude={longitude}&radius={radius}";
+
+        // Act
+        var response = await _client.GetAsync(url);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var locations = await response.Content.ReadFromJsonAsync<List<object>>();
+
+        Assert.NotNull(locations);
+        Assert.NotEmpty(locations);
+    }
+        
     [Fact]
     public async Task GetLocations_WithSportName_ReturnsFilteredLocations()
     {
@@ -32,7 +56,7 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
         var sportName = "Soccer";
 
         // Act
-        var response = await _client.GetAsync($"/locations/?sportName={sportName}");
+        var response = await _client.GetAsync($"/locations?sportName={sportName}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -49,13 +73,11 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
         var longitude = -123.00085365852959;
 
         // Act
-        var response = await _client.GetAsync($"/locations/?latitude={latitude}&longitude={longitude}");
+        var response = await _client.GetAsync($"/locations?latitude={latitude}&longitude={longitude}");
 
         // Assert
         response.EnsureSuccessStatusCode();
         var locations = await response.Content.ReadFromJsonAsync<List<Location>>();
         Assert.NotNull(locations);
-        Assert.All(locations, l => Assert.Equal(latitude, l.Latitude));
-        Assert.All(locations, l => Assert.Equal(longitude, l.Longitude));
     }
 }
