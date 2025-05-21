@@ -74,6 +74,14 @@ namespace PlaySpotApi.Routes
                         : 0;
                     var scaledScore = (int)Math.Round(averageFullness / 4.0 * 100);
 
+                    double? distance = null;
+                    if (query.Latitude.HasValue && query.Longitude.HasValue)
+                    {
+                        distance = Math.Round(GeoHelper.CalculateDistance(
+                            query.Latitude.Value, query.Longitude.Value,
+                            location.Latitude, location.Longitude), 2);
+                    }
+
                     return new LocationDTO
                     {
                         LocationId = location.LocationId,
@@ -82,7 +90,8 @@ namespace PlaySpotApi.Routes
                         Latitude = location.Latitude,
                         Longitude = location.Longitude,
                         Sports = [.. location.Sports],//.Select(s => s).ToList(),
-                        FullnessScore = scaledScore
+                        FullnessScore = scaledScore,
+                        Distance = distance ?? 0
                     };
                 }).ToList();
 
