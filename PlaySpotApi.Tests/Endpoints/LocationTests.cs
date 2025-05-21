@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 
 using PlaySpotApi.Tests;
 using PlaySpotApi.Models;
+using PlaySpotApi.DTOs;
 
 public class LocationTests: IClassFixture<CustomWebApplicationFactory>
 {
@@ -20,7 +21,7 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var locations = await response.Content.ReadFromJsonAsync<List<Location>>();
+        var locations = await response.Content.ReadFromJsonAsync<List<LocationDTO>>();
         Assert.NotNull(locations);
         Assert.NotEmpty(locations);
     }
@@ -43,7 +44,7 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var locations = await response.Content.ReadFromJsonAsync<List<object>>();
+        var locations = await response.Content.ReadFromJsonAsync<List<LocationDTO>>();
 
         Assert.NotNull(locations);
         Assert.NotEmpty(locations);
@@ -60,7 +61,7 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var locations = await response.Content.ReadFromJsonAsync<List<Location>>();
+        var locations = await response.Content.ReadFromJsonAsync<List<LocationDTO>>();
         Assert.NotNull(locations);
         Assert.All(locations, l => Assert.Contains(sportName, l.Sports.Select(s => s.Name)));
     }
@@ -77,7 +78,7 @@ public class LocationTests: IClassFixture<CustomWebApplicationFactory>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var locations = await response.Content.ReadFromJsonAsync<List<Location>>();
+        var locations = await response.Content.ReadFromJsonAsync<List<LocationDTO>>();
         Assert.NotNull(locations);
     }
 }
