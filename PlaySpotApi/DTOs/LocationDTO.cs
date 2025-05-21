@@ -11,5 +11,6 @@ namespace PlaySpotApi.DTOs
         public double Longitude { get; set; }
         public required ICollection<Sport> Sports { get; set; }
         public int FullnessScore { get; set; } // 0 to 100
+        public double Distance { get; set; } // in kilometers
     }
 }
