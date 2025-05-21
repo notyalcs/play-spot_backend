@@ -82,7 +82,8 @@ app.MapGet("/health", () => Results.Ok("Healthy"))
 var locationGroup = app.MapGroup("/locations");
 locationGroup.MapLocationRoutes();
 
-app.MapLocationActivityRoutes();
+var fullnessGroup = app.MapGroup("/fullness");
+fullnessGroup.MapFullnessRoutes();
 
 var sportGroup = app.MapGroup("/sports");
 sportGroup.MapSportRoutes();

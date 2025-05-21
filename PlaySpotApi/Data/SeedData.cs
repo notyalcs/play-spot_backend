@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using PlaySpotApi.Models;
 
 namespace PlaySpotApi.Data
@@ -40,11 +39,7 @@ namespace PlaySpotApi.Data
                     sportsDict["Soccer"],
                     sportsDict["Basketball"]
                 },
-                LocationActivities = new List<LocationActivity>
-                {
-                    new LocationActivity { DateTime = new DateTime(2025, 5, 1, 1, 30, 0, DateTimeKind.Utc), FullnessLevel = FullnessLevel.Available },
-                    new LocationActivity { DateTime = new DateTime(2025, 5, 1, 0, 30, 0, DateTimeKind.Utc), FullnessLevel = FullnessLevel.Moderate }
-                }
+                Fullness = new List<Fullness> { }
             };
 
             var burnabyLake = new Location
@@ -60,10 +55,7 @@ namespace PlaySpotApi.Data
                     sportsDict["Soccer"],
                     sportsDict["Basketball"]
                 },
-                LocationActivities = new List<LocationActivity>
-                {
-                    new LocationActivity { DateTime = new DateTime(2025, 5, 1, 1, 30, 0, DateTimeKind.Utc), FullnessLevel = FullnessLevel.Crowded }
-                }
+                Fullness = new List<Fullness> { }
             };
 
             var broadview = new Location
@@ -78,10 +70,7 @@ namespace PlaySpotApi.Data
                     sportsDict["Tennis"],
                     sportsDict["Basketball"]
                 },
-                LocationActivities = new List<LocationActivity>
-                {
-                    new LocationActivity { DateTime = new DateTime(2025, 5, 1, 0, 45, 0, DateTimeKind.Utc), FullnessLevel = FullnessLevel.Full }
-                }
+                Fullness = new List<Fullness> { }
             };
 
             var centralPark = new Location
@@ -97,10 +86,7 @@ namespace PlaySpotApi.Data
                     sportsDict["Table Tennis"],
                     sportsDict["Basketball"]
                 },
-                LocationActivities = new List<LocationActivity>
-                {
-                    new LocationActivity { DateTime = new DateTime(2025, 5, 1, 1, 0, 0, DateTimeKind.Utc), FullnessLevel = FullnessLevel.Closed }
-                }
+                Fullness = new List<Fullness> { }
             };
             
             context.Locations.AddRange(bcit, burnabyLake, broadview, centralPark);

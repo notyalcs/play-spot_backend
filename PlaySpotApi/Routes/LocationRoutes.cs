@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PlaySpotApi.Data;
 using PlaySpotApi.Models;
 using PlaySpotApi.Helpers;
+using PlaySpotApi.DTOs;
 
 
 namespace PlaySpotApi.Routes
@@ -21,8 +22,12 @@ namespace PlaySpotApi.Routes
                     return Results.BadRequest(results);
                 }
 
+                var now = DateTime.UtcNow;
+                var cutoffTime = now.AddHours(-2);
+
                 var locationsQuery = db.Locations
                     .Include(l => l.Sports)
+                    .Include(l => l.Fullness)
                     .AsQueryable();
 
                 if (!string.IsNullOrEmpty(query.SportName))
@@ -30,27 +35,62 @@ namespace PlaySpotApi.Routes
                     locationsQuery = locationsQuery
                         .Where(l => l.Sports.Any(s => s.Name.ToLower() == query.SportName.ToLower()));
                 }
+                
+                var locations = await locationsQuery.ToListAsync();
 
                 if (query.Latitude.HasValue && query.Longitude.HasValue)
                 {
-                    var filtered = await locationsQuery.ToListAsync();
                     // TODO: Make the calculation inline so SQL can handle it if data set is large
-                    filtered = filtered
+                    locations = locations
                         .Where(L => GeoHelper.IsWithinRadius(
                             query.Latitude.Value, query.Longitude.Value,
                             L.Latitude, L.Longitude,
                             query.Radius ?? 10))
                         .ToList();
-                    
-                    return Results.Ok(filtered);
                 }
 
-                var locations = await locationsQuery.ToListAsync();
-                return Results.Ok(locations);
+                var locationDTOs = locations.Select(location =>
+                {
+                    var recent = location.Fullness
+                        .Where(f => f.DateTime >= cutoffTime)
+                        .OrderByDescending(f => f.DateTime)
+                        .ToList();
+
+                    double weightedSum = 0;
+                    double weightTotal = 0;
+
+                    foreach (var f in recent)
+                    {
+                        var minutesSince = (now - f.DateTime).TotalMinutes;
+                        var weight = 120 - minutesSince;
+                        if (weight < 0) continue;
+
+                        weightedSum += (int)f.FullnessLevel * weight;
+                        weightTotal += weight;
+                    }
+
+                    var averageFullness = weightTotal > 0
+                        ? (int)weightedSum / weightTotal
+                        : 0;
+                    var scaledScore = (int)Math.Round(averageFullness / 4.0 * 100);
+
+                    return new LocationDTO
+                    {
+                        LocationId = location.LocationId,
+                        Name = location.Name,
+                        Address = location.Address,
+                        Latitude = location.Latitude,
+                        Longitude = location.Longitude,
+                        Sports = [.. location.Sports],//.Select(s => s).ToList(),
+                        FullnessScore = scaledScore
+                    };
+                }).ToList();
+
+                return Results.Ok(locationDTOs);
             })
             .WithName("GetLocations")
             .WithOpenApi()
-            .Produces<List<Location>>(StatusCodes.Status200OK)
+            .Produces<List<LocationDTO>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status500InternalServerError);
 
             group.MapPost("/create", async (PlaySpotDbContext db, Location location) =>
