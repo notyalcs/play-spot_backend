@@ -32,8 +32,8 @@ namespace PlaySpotApi.Data
                 // Coordinates = "49.24883642073071, -123.00085365852959",
                 Latitude = 49.24883642073071,
                 Longitude = -123.00085365852959,
-                Sports = new List<Sport> 
-                { 
+                Sports = new List<Sport>
+                {
                     sportsDict["Tennis"],
                     sportsDict["Table Tennis"],
                     sportsDict["Soccer"],
@@ -49,8 +49,8 @@ namespace PlaySpotApi.Data
                 // Coordinates = "49.25315305592485, -122.96961053016025",
                 Latitude = 49.25315305592485,
                 Longitude = -122.96961053016025,
-                Sports = new List<Sport> 
-                { 
+                Sports = new List<Sport>
+                {
                     sportsDict["Tennis"],
                     sportsDict["Soccer"],
                     sportsDict["Basketball"]
@@ -65,7 +65,7 @@ namespace PlaySpotApi.Data
                 // Coordinates = "49.25552736455759, -123.01618148991702",
                 Latitude = 49.25552736455759,
                 Longitude = -123.01618148991702,
-                Sports = new List<Sport> 
+                Sports = new List<Sport>
                 {
                     sportsDict["Tennis"],
                     sportsDict["Basketball"]
@@ -80,7 +80,7 @@ namespace PlaySpotApi.Data
                 // Coordinates = "49.227936228186806, -123.01799296037849",
                 Latitude = 49.227936228186806,
                 Longitude = -123.01799296037849,
-                Sports = new List<Sport> 
+                Sports = new List<Sport>
                 {
                     sportsDict["Tennis"],
                     sportsDict["Table Tennis"],
@@ -88,8 +88,78 @@ namespace PlaySpotApi.Data
                 },
                 Fullness = new List<Fullness> { }
             };
-            
-            context.Locations.AddRange(bcit, burnabyLake, broadview, centralPark);
+
+            var terryFoxPark = new Location
+            {
+                Name = "Terry Fox Park",
+                Address = "1269 Riverside Dr, Port Coquitlam, BC V3B 7V7",
+                Latitude = 49.2665,
+                Longitude = -122.7352,
+                Sports = new List<Sport>
+    {
+        sportsDict["Tennis"],
+        sportsDict["Soccer"]
+    },
+                Fullness = new List<Fullness> { }
+            };
+
+            var portCoquitlamCommunityCentre = new Location
+            {
+                Name = "Port Coquitlam Community Centre",
+                Address = "2150 Wilson Ave, Port Coquitlam, BC V3C 6J5",
+                Latitude = 49.2620,
+                Longitude = -122.7787,
+                Sports = new List<Sport>
+    {
+        sportsDict["Basketball"],
+        sportsDict["Table Tennis"]
+    },
+                Fullness = new List<Fullness> { }
+            };
+
+            var hydeCreekRecreationCentre = new Location
+            {
+                Name = "Hyde Creek Recreation Centre",
+                Address = "1379 Laurier Ave, Port Coquitlam, BC V3B 2B9",
+                Latitude = 49.2648,
+                Longitude = -122.7653,
+                Sports = new List<Sport>
+    {
+           sportsDict["Basketball"]
+    },
+                Fullness = new List<Fullness> { }
+            };
+
+            var gatesPark = new Location
+            {
+                Name = "Gates Park",
+                Address = "2300 Reeve St, Port Coquitlam, BC V3C 6G1",
+                Latitude = 49.2611,
+                Longitude = -122.7775,
+                Sports = new List<Sport>
+    {
+        sportsDict["Soccer"],
+        sportsDict["Tennis"]
+    },
+                Fullness = new List<Fullness> { }
+            };
+
+            var routleyPark = new Location
+            {
+                Name = "Routley Park",
+                Address = "1570 Western Dr, Port Coquitlam, BC V3C 2X1",
+                Latitude = 49.2672,
+                Longitude = -122.7584,
+                Sports = new List<Sport>
+    {
+        sportsDict["Tennis"],
+           sportsDict["Basketball"]
+    },
+                Fullness = new List<Fullness> { }
+            };
+
+
+            context.Locations.AddRange(bcit, burnabyLake, broadview, centralPark, terryFoxPark, routleyPark, gatesPark, hydeCreekRecreationCentre, portCoquitlamCommunityCentre);
             context.SaveChanges();
         }
     }
