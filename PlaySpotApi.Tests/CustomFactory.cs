@@ -10,20 +10,22 @@ namespace PlaySpotApi.Tests
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
+        private readonly string _dbName = Guid.NewGuid().ToString();
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
             {
                 services.Where(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<PlaySpotDbContext>))
                     .ToList()
-                    .ForEach(d => 
+                    .ForEach(d =>
                     {
                         services.Remove(d);
                     });
 
                 services.AddDbContext<PlaySpotDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("TestDb");
+                    options.UseInMemoryDatabase(_dbName);
                 });
 
                 var serviceProvider = services.BuildServiceProvider();
