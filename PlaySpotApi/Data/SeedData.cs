@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using PlaySpotApi.Models;
 
 namespace PlaySpotApi.Data

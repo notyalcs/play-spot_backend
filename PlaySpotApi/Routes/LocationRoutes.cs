@@ -23,6 +23,7 @@ namespace PlaySpotApi.Routes
 
                 var locationsQuery = db.Locations
                     .Include(l => l.Sports)
+                    .Include(l => l.Fullness)
                     .AsQueryable();
 
                 if (!string.IsNullOrEmpty(query.SportName))

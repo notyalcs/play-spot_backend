@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 using PlaySpotApi.Data;
@@ -12,16 +10,45 @@ namespace PlaySpotApi.Routes
     {
         public static RouteGroupBuilder MapFullnessRoutes(this RouteGroupBuilder group)
         {
-            // group.MapGet("/locationActivities", async (PlaySpotDbContext db) =>
-            // {
-            //     var locations = await db.LocationActivities.ToListAsync();
+            group.MapPost("/create", async ([AsParameters] FullnessQuery query, PlaySpotDbContext db) =>
+            {
+                var results = new List<ValidationResult>();
+                var context = new ValidationContext(query);
+                if (!Validator.TryValidateObject(query, context, results, true))
+                {
+                    return Results.BadRequest(results);
+                }
 
-            //     return Results.Ok(locations);
-            // })
-            // .WithName("GetLocationAvticities")
-            // .WithOpenApi()
-            // .Produces<List<LocationActivity>>(StatusCodes.Status200OK)
-            // .Produces(StatusCodes.Status500InternalServerError);
+                var locationQuery = db.Locations
+                    .AsQueryable();
+
+                locationQuery = locationQuery
+                    .Where(l => l.LocationId == query.LocationId);
+
+                var location = await locationQuery.FirstOrDefaultAsync();
+                if (location == null)
+                {
+                    return Results.NotFound("Location not found");
+                }
+
+                var fullness = new Fullness
+                {
+                    DateTime = DateTime.UtcNow,
+                    FullnessLevel = query.FullnessLevel,
+                    Location = location
+                };
+
+                db.Fullness.Add(fullness);
+                await db.SaveChangesAsync();
+
+                return Results.Created($"/fullness/{fullness.FullnessId}", fullness);
+            })
+            .WithName("CreateFullness")
+            .WithOpenApi()
+            .Produces<Fullness>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError);
 
             return group;
         }
