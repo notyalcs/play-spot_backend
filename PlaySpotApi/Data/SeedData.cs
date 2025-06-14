@@ -96,10 +96,10 @@ namespace PlaySpotApi.Data
                 Latitude = 49.2665,
                 Longitude = -122.7352,
                 Sports = new List<Sport>
-    {
-        sportsDict["Tennis"],
-        sportsDict["Soccer"]
-    },
+                {
+                    sportsDict["Tennis"],
+                    sportsDict["Soccer"]
+                },
                 Fullness = new List<Fullness> { }
             };
 
@@ -110,10 +110,10 @@ namespace PlaySpotApi.Data
                 Latitude = 49.2620,
                 Longitude = -122.7787,
                 Sports = new List<Sport>
-    {
-        sportsDict["Basketball"],
-        sportsDict["Table Tennis"]
-    },
+                {
+                    sportsDict["Basketball"],
+                    sportsDict["Table Tennis"]
+                },
                 Fullness = new List<Fullness> { }
             };
 
@@ -124,9 +124,9 @@ namespace PlaySpotApi.Data
                 Latitude = 49.2648,
                 Longitude = -122.7653,
                 Sports = new List<Sport>
-    {
-           sportsDict["Basketball"]
-    },
+                {
+                    sportsDict["Basketball"]
+                },
                 Fullness = new List<Fullness> { }
             };
 
@@ -137,10 +137,10 @@ namespace PlaySpotApi.Data
                 Latitude = 49.2611,
                 Longitude = -122.7775,
                 Sports = new List<Sport>
-    {
-        sportsDict["Soccer"],
-        sportsDict["Tennis"]
-    },
+                {
+                    sportsDict["Soccer"],
+                    sportsDict["Tennis"]
+                },
                 Fullness = new List<Fullness> { }
             };
 
@@ -151,10 +151,10 @@ namespace PlaySpotApi.Data
                 Latitude = 49.2672,
                 Longitude = -122.7584,
                 Sports = new List<Sport>
-    {
-        sportsDict["Tennis"],
-           sportsDict["Basketball"]
-    },
+                {
+                    sportsDict["Tennis"],
+                    sportsDict["Basketball"]
+                },
                 Fullness = new List<Fullness> { }
             };
 

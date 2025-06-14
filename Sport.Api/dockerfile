@@ -1,0 +1,31 @@
+# Build and run the PlaySpotApi project using Docker
+# Use the official .NET SDK image to build the application
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /App
+
+# Install the .NET EF Core tool
+# RUN dotnet tool install --global dotnet-ef \
+#     && apt-get update \
+#     && apt-get install -y postgresql-client \
+#     && rm -rf /var/lib/apt/lists/*
+
+# ENV PATH="${PATH}:/root/.dotnet/tools"
+
+# Copy the project files to the container
+COPY . ./
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
+
+# Use the official .NET runtime image to run the application
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+WORKDIR /App
+COPY --from=build /App/out .
+
+ENV ASPNETCORE_URLS=http://+:80
+EXPOSE 80
+
+# COPY ./Scripts/wait-for-db.sh ./wait-for-db.sh
+# RUN chmod +x ./wait-for-db.sh
+
+# ENTRYPOINT [ "/bin/bash", "-c", "./wait-for-db.sh db dotnet ef database update --no-build && dotnet Sport.Api.dll" ]
+ENTRYPOINT [ "dotnet", "Sport.Api.dll" ]
