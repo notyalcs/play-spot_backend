@@ -1,0 +1,71 @@
+services:
+  db:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      retries: 5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: play-spot_db
+    volumes:
+      - playspot_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  location:
+    build: Location.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=play-spot_db
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=play-spot_db;Username=postgres;Password=password
+    depends_on:
+      - db
+    ports:
+      - "5020:80"
+  
+  fullness:
+    build: Fullness.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=play-spot_db
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=play-spot_db;Username=postgres;Password=password
+    depends_on:
+      - db
+    ports:
+      - "5188:80"
+
+  sport:
+    build: Sport.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=play-spot_db
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=play-spot_db;Username=postgres;Password=password
+    depends_on:
+      - db
+    ports:
+      - "5048:80"
+
+  aggregator:
+    build: Aggregator.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=play-spot_db
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=play-spot_db;Username=postgres;Password=password
+    depends_on:
+      - db
+    ports:
+      - "5043:80"
+
+volumes:
+  playspot_data:
