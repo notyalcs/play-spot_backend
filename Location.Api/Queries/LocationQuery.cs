@@ -4,8 +4,6 @@ namespace Location.Api.Queries
 {
     public class LocationQuery
     {
-        public string? SportName { get; set; }
-
         [Range(-90, 90)]
         public double? Latitude { get; set; }
 

@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 using Location.Api.Data;
-using Location.Api.Models;
 using Location.Api.Queries;
 using Location.Api.Helpers;
 
@@ -21,25 +19,15 @@ namespace Location.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Models.Location>>> GetLocations([AsParameters] LocationQuery query)
+        public async Task<ActionResult<List<Models.Location>>> GetLocations([FromQuery] LocationQuery query)
         {
-            var results = new List<ValidationResult>();
-            var context = new ValidationContext(query);
-            if (!Validator.TryValidateObject(query, context, results, true))
-            {
-                return BadRequest(results);
-            }
+            var locations = await _context.Locations.ToListAsync();
 
-            var locationQuery = _context.Locations
-                .AsQueryable();
-
-            var locations = await locationQuery.ToListAsync();
-
-            if (query.Latitude.HasValue && query.Longitude.HasValue)
+            if (query?.Latitude is double lat && query.Longitude is double lon)
             {
                 locations = locations
                     .Where(l => GeoHelper.IsWithinRadius(
-                        query.Latitude.Value, query.Longitude.Value,
+                        lat, lon,
                         l.Latitude, l.Longitude,
                         query.Radius ?? 10))
                     .ToList();
