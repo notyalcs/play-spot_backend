@@ -23,7 +23,7 @@ namespace Fullness.Api.Migrations
                     FullnessId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     LocationId = table.Column<int>(type: "integer", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FullnessLevel = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

@@ -31,14 +31,14 @@ namespace Fullness.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FullnessId"));
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("FullnessLevel")
                         .HasColumnType("integer");
 
                     b.Property<int>("LocationId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("FullnessId");
 

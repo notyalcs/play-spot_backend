@@ -16,6 +16,18 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
+    options.AddPolicy("AllowBackendMicroservices", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:5432",
+            "http://localhost:5020",
+            "http://localhost:5188",
+            "http://localhost:5048",
+            "http://localhost:5043"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
 });
 
 builder.Services.AddControllers();
@@ -58,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
+app.UseCors("AllowBackendMicroservices");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

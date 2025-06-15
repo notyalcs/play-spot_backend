@@ -35,5 +35,18 @@ namespace Location.Api.Controllers
 
             return Ok(locations);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Models.Location>> GetLocations(int id)
+        {
+            var location = await _context.Locations.FindAsync(id);
+
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(location);
+        }
     }
 }

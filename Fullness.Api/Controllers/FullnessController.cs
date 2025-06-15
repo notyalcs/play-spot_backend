@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Fullness.Api.Data;
 using Fullness.Api.Models;
 using Fullness.Api.Queries;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fullness.Api.Controllers
 {
@@ -28,21 +29,9 @@ namespace Fullness.Api.Controllers
                 return BadRequest(results);
             }
 
-            // var fullnessQuery = _context.Fullness
-            //     .AsQueryable();
-
-            // var locations = fullnessQuery
-            //     .Where(l => l.LocationId == query.LocationId);
-
-            // var location = await locationQuery.FirstOrDefaultAsync();
-            // if (location == null)
-            // {
-            //     return NotFound("Location not found");
-            // }
-
             var fullness = new Models.Fullness
             {
-                DateTime = DateTime.UtcNow,
+                TimeStamp = DateTime.UtcNow,
                 FullnessLevel = query.FullnessLevel,
                 LocationId = query.LocationId
             };
@@ -57,6 +46,39 @@ namespace Fullness.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error saving data: {ex.Message}");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFullness([FromQuery] int locationId)
+        {
+            if (locationId <= 0)
+            {
+                return BadRequest("Invalid location ID.");
+            }
+
+            var fullnessList = await _context.Fullness
+                .Where(f => f.LocationId == locationId)
+                .OrderByDescending(f => f.TimeStamp)
+                .ToListAsync();
+
+            return Ok(fullnessList);
+        }
+
+        [HttpGet("recent")]
+        public async Task<IActionResult> GetRecentFullness([FromQuery] int locationId, [FromQuery] int minues = 120)
+        {
+            if (locationId <= 0)
+            {
+                return BadRequest("Invalid location ID.");
+            }
+
+            var cutoffTime = DateTime.UtcNow.AddMinutes(-minues);
+            var recentFullnessList = await _context.Fullness
+                .Where(f => f.LocationId == locationId && f.TimeStamp >= cutoffTime)
+                .OrderByDescending(f => f.TimeStamp)
+                .ToListAsync();
+
+            return Ok(recentFullnessList);
         }
     }
 }
