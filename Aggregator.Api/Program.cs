@@ -11,7 +11,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:5173",               // for local dev
-            "https://play-spot-five.vercel.app"         // for deployed frontend
+            "https://play-spot-five.vercel.app",         // for deployed frontend
+            "https://play-spot-frontend.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
