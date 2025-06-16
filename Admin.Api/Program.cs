@@ -29,6 +29,26 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddHttpClient("LocationService", client =>
+{
+    var locationServiceUrl = builder.Configuration.GetValue<string>("Services:Location");
+    if (string.IsNullOrEmpty(locationServiceUrl))
+    {
+        throw new InvalidOperationException("Configuration value for 'Services:Location' is missing.");
+    }
+    client.BaseAddress = new Uri(locationServiceUrl);
+});
+builder.Services.AddHttpClient("SportService", client =>
+{
+    var sportServiceUrl = builder.Configuration.GetValue<string>("Services:Sport");
+    if (string.IsNullOrEmpty(sportServiceUrl))
+    {
+        throw new InvalidOperationException("Configuration value for 'Services:Sport' is missing.");
+    }
+    client.BaseAddress = new Uri(sportServiceUrl);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

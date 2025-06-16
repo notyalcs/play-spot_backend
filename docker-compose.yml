@@ -64,8 +64,26 @@ services:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=play-spot_db;Username=postgres;Password=password
     depends_on:
       - db
+      - location
+      - fullness
+      - sport
     ports:
       - "5043:80"
+
+  admin:
+    build: Admin.Api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=play-spot_db
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=play-spot_db;Username=postgres;Password=password
+    depends_on:
+      - db
+      - location
+      - sport
+    ports:
+      - "7083:80"
 
 volumes:
   playspot_data:

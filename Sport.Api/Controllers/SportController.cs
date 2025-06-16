@@ -17,6 +17,8 @@ namespace Sport.Api.Controllers
             _context = context;
         }
 
+        // GET /api/Sport
+        // GET /api/Sport?locationId=1
         [HttpGet]
         public async Task<ActionResult<List<SportDTO>>> GetSports([FromQuery] SportQuery query)
         {
@@ -47,6 +49,73 @@ namespace Sport.Api.Controllers
                 .ToListAsync();
 
             return Ok(sportNames);
+        }
+
+        // POST /api/Sport
+        [HttpPost]
+        public async Task<ActionResult<SportDTO>> CreateSport([FromBody] SportDTO sportDto)
+        {
+            if (sportDto == null)
+            {
+                return BadRequest("Sport data is required.");
+            }
+
+            var sport = new Models.Sport
+            {
+                LocationId = sportDto.LocationId,
+                Name = sportDto.Name
+            };
+
+            _context.Sports.Add(sport);
+            await _context.SaveChangesAsync();
+
+            var createdDTO = new SportDTO(
+                sport.SportId,
+                sport.LocationId,
+                sport.Name
+            );
+
+            return CreatedAtAction(null, createdDTO);
+        }
+
+        // // PUT /api/Sport/{id}
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> UpdateSport(int id, [FromBody] SportDTO sportDto)
+        // {
+        //     if (sportDto == null || id != sportDto.SportId)
+        //     {
+        //         return BadRequest("Invalid sport data.");
+        //     }
+
+        //     var sport = await _context.Sports.FindAsync(id);
+        //     if (sport == null)
+        //     {
+        //         return NotFound("Sport not found.");
+        //     }
+
+        //     sport.LocationId = sportDto.LocationId;
+        //     sport.Name = sportDto.Name;
+
+        //     _context.Entry(sport).State = EntityState.Modified;
+        //     await _context.SaveChangesAsync();
+
+        //     return NoContent();
+        // }
+
+        // DELETE /api/Sport/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSport(int id)
+        {
+            var sport = await _context.Sports.FindAsync(id);
+            if (sport == null)
+            {
+                return NotFound("Sport not found.");
+            }
+
+            _context.Sports.Remove(sport);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
