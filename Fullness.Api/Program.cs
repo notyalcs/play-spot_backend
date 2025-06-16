@@ -35,21 +35,21 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FullnessDbContext>();
 
-    if (app.Environment.IsDevelopment())
-    {
-        // dbContext.Database.EnsureDeleted();
-        // dbContext.Database.EnsureCreated();
-    }
-    else
-    {
-        dbContext.Database.ExecuteSqlRaw(@"
-            DO $$ DECLARE
-                r RECORD;
-            BEGIN
-                EXECUTE 'DROP SCHEMA fullness CASCADE';
-                EXECUTE 'CREATE SCHEMA IF NOT EXISTS fullness';
-            END $$;");
-    }
+    // if (app.Environment.IsDevelopment())
+    // {
+    //     // dbContext.Database.EnsureDeleted();
+    //     // dbContext.Database.EnsureCreated();
+    // }
+    // else
+    // {
+    //     dbContext.Database.ExecuteSqlRaw(@"
+    //         DO $$ DECLARE
+    //             r RECORD;
+    //         BEGIN
+    //             EXECUTE 'DROP SCHEMA fullness CASCADE';
+    //             EXECUTE 'CREATE SCHEMA IF NOT EXISTS fullness';
+    //         END $$;");
+    // }
 
     if (dbContext.Database.IsRelational())
     {

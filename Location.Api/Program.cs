@@ -36,21 +36,21 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<LocationDbContext>();
 
-    if (app.Environment.IsDevelopment())
-    {
-        // dbContext.Database.EnsureDeleted();
-        // dbContext.Database.EnsureCreated();
-    }
-    else
-    {
-        dbContext.Database.ExecuteSqlRaw(@"
-            DO $$ DECLARE
-                r RECORD;
-            BEGIN
-                EXECUTE 'DROP SCHEMA location CASCADE';
-                EXECUTE 'CREATE SCHEMA IF NOT EXISTS location';
-            END $$;");
-    }
+    // if (app.Environment.IsDevelopment())
+    // {
+    //     // dbContext.Database.EnsureDeleted();
+    //     // dbContext.Database.EnsureCreated();
+    // }
+    // else
+    // {
+    //     dbContext.Database.ExecuteSqlRaw(@"
+    //         DO $$ DECLARE
+    //             r RECORD;
+    //         BEGIN
+    //             EXECUTE 'DROP SCHEMA location CASCADE';
+    //             EXECUTE 'CREATE SCHEMA IF NOT EXISTS location';
+    //         END $$;");
+    // }
 
     if (dbContext.Database.IsRelational())
     {
