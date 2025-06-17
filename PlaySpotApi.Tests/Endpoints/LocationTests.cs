@@ -1,8 +1,6 @@
 using System.Net.Http.Json;
 
 using PlaySpotApi.Tests;
-using Location.Api.Models;
-using Location.Api.DTOs;
 
 public class LocationTests : IClassFixture<LocationWebApplicationFactory>
 {
@@ -21,7 +19,7 @@ public class LocationTests : IClassFixture<LocationWebApplicationFactory>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var locations = await response.Content.ReadFromJsonAsync<List<LocationDTO>>();
+        var locations = await response.Content.ReadFromJsonAsync<List<Location.Api.DTOs.LocationDTO>>();
         Assert.NotNull(locations);
         Assert.NotEmpty(locations);
     }

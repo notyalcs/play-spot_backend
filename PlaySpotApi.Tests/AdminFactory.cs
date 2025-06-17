@@ -4,39 +4,58 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-// using Admin.Api.Data;
-
 namespace PlaySpotApi.Tests
 {
+    // Factory for Admin service, also starts Location and Sport services for integration tests
     public class AdminWebApplicationFactory : WebApplicationFactory<AdminProgram>
     {
-        // private readonly string _dbName = Guid.NewGuid().ToString();
+        private LocationWebApplicationFactory? _locationFactory;
+        private SportWebApplicationFactory? _sportFactory;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            _locationFactory = new LocationWebApplicationFactory();
+            _sportFactory = new SportWebApplicationFactory();
+
+            var locationClient = _locationFactory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                BaseAddress = new Uri("http://location/")
+            });
+            var sportClient = _sportFactory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                BaseAddress = new Uri("http://sport/")
+            });
+
             builder.ConfigureServices(services =>
             {
-                // services.Where(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<AdminDbContext>))
-                //     .ToList()
-                //     .ForEach(d =>
-                //     {
-                //         services.Remove(d);
-                //     });
+                services.Where(d => d.ServiceType == typeof(IHttpClientFactory))
+                    .ToList()
+                    .ForEach(d =>
+                    {
+                        services.Remove(d);
+                    });
 
-                // services.AddDbContext<AdminDbContext>(options =>
-                // {
-                //     options.UseInMemoryDatabase(_dbName);
-                // });
+                services.AddHttpClient("LocationService", c =>
+                {
+                    c.BaseAddress = locationClient.BaseAddress;
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    _locationFactory.Server.CreateHandler()!);
 
-                var serviceProvider = services.BuildServiceProvider();
-                using var scope = serviceProvider.CreateScope();
-
-                // var dbAdmin = scope.ServiceProvider.GetRequiredService<AdminDbContext>();
-
-                // dbAdmin.Database.EnsureCreated();
-
-                // dbAdmin.SaveChanges();
+                services.AddHttpClient("SportService", c =>
+                {
+                    c.BaseAddress = sportClient.BaseAddress;
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                    _sportFactory.Server.CreateHandler()!);
             });
+        }
+        
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            _locationFactory?.Dispose();
+            _sportFactory?.Dispose();
         }
     }
 }

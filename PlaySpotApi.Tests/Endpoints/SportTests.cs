@@ -1,10 +1,8 @@
 using System.Net.Http.Json;
 
 using PlaySpotApi.Tests;
-using Sport.Api.Models;
-using Sport.Api.DTOs;
 
-public class SportTests: IClassFixture<SportWebApplicationFactory>
+public class SportTests : IClassFixture<SportWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
@@ -21,7 +19,7 @@ public class SportTests: IClassFixture<SportWebApplicationFactory>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var sports = await response.Content.ReadFromJsonAsync<List<SportDTO>>();
+        var sports = await response.Content.ReadFromJsonAsync<List<Sport.Api.DTOs.SportDTO>>();
         Assert.NotNull(sports);
         Assert.NotEmpty(sports);
     }
