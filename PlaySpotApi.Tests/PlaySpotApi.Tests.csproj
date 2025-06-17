@@ -24,6 +24,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlaySpotApi\PlaySpotApi.csproj" />
+    <ProjectReference Include="..\Admin.Api\Admin.Api.csproj" />
+    <ProjectReference Include="..\Aggregator.Api\Aggregator.Api.csproj" />
+    <ProjectReference Include="..\Fullness.Api\Fullness.Api.csproj" />
+    <ProjectReference Include="..\Location.Api\Location.Api.csproj" />
+    <ProjectReference Include="..\Sport.Api\Sport.Api.csproj" />
   </ItemGroup>
 
 </Project>
