@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-using PlaySpotApi.Data;
+using Fullness.Api.Data;
 
 namespace PlaySpotApi.Tests
 {
-    public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+    public class FullnessWebApplicationFactory : WebApplicationFactory<FullnessProgram>
     {
         private readonly string _dbName = Guid.NewGuid().ToString();
 
@@ -16,14 +16,14 @@ namespace PlaySpotApi.Tests
         {
             builder.ConfigureServices(services =>
             {
-                services.Where(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<PlaySpotDbContext>))
+                services.Where(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<FullnessDbContext>))
                     .ToList()
                     .ForEach(d =>
                     {
                         services.Remove(d);
                     });
 
-                services.AddDbContext<PlaySpotDbContext>(options =>
+                services.AddDbContext<FullnessDbContext>(options =>
                 {
                     options.UseInMemoryDatabase(_dbName);
                 });
@@ -31,11 +31,11 @@ namespace PlaySpotApi.Tests
                 var serviceProvider = services.BuildServiceProvider();
                 using var scope = serviceProvider.CreateScope();
 
-                var db = scope.ServiceProvider.GetRequiredService<PlaySpotDbContext>();
+                var dbFullness = scope.ServiceProvider.GetRequiredService<FullnessDbContext>();
 
-                db.Database.EnsureCreated();
+                dbFullness.Database.EnsureCreated();
 
-                db.SaveChanges();
+                dbFullness.SaveChanges();
             });
         }
     }

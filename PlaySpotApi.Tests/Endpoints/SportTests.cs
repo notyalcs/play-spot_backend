@@ -1,13 +1,12 @@
 using System.Net.Http.Json;
 
 using PlaySpotApi.Tests;
-using PlaySpotApi.Models;
 
-public class SportTests: IClassFixture<CustomWebApplicationFactory>
+public class SportTests : IClassFixture<SportWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
-    public SportTests(CustomWebApplicationFactory factory)
+    public SportTests(SportWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
@@ -16,11 +15,11 @@ public class SportTests: IClassFixture<CustomWebApplicationFactory>
     public async Task GetSports_ReturnsOk()
     {
         // Act
-        var response = await _client.GetAsync("/sports/");
+        var response = await _client.GetAsync("/api/Sport");
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var sports = await response.Content.ReadFromJsonAsync<List<string>>();
+        var sports = await response.Content.ReadFromJsonAsync<List<Sport.Api.DTOs.SportDTO>>();
         Assert.NotNull(sports);
         Assert.NotEmpty(sports);
     }
