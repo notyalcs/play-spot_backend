@@ -11,20 +11,13 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:5173",               // for local dev
-            "https://play-spot-five.vercel.app",         // for deployed frontend
-            "https://play-spot-frontend.vercel.app"
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-    options.AddPolicy("AllowBackendMicroservices", policy =>
-    {
-        policy.WithOrigins(
             "http://localhost:5432",
             "http://localhost:5020",
             "http://localhost:5188",
             "http://localhost:5048",
-            "http://localhost:5043"
+            "http://localhost:5043",
+            "https://play-spot-five.vercel.app",         // for deployed frontend
+            "https://play-spot-frontend.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -71,7 +64,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
-app.UseCors("AllowBackendMicroservices");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
