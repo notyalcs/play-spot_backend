@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PlaySpotApi\PlaySpotApi.csproj" />
+    <!-- <ProjectReference Include="..\PlaySpotApi\PlaySpotApi.csproj" /> -->
     <ProjectReference Include="..\Admin.Api\Admin.Api.csproj" />
     <ProjectReference Include="..\Aggregator.Api\Aggregator.Api.csproj" />
     <ProjectReference Include="..\Fullness.Api\Fullness.Api.csproj" />

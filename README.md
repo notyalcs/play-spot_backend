@@ -35,7 +35,99 @@ play-spot_backend/
 │   └── workflows/
 │       └── ci.yml       # GitHub Actions workflow
 │
-├── PlaySpotApi/
+├── db/
+│   └── init/
+│       └── 01-create-schemas.sql       # local DB setup
+│
+├── Admin.Api/
+│   └── Controllers/
+│       ├── LocationController.cs
+│       ├── ...
+│   └── DTOs/
+│       ├── LocationDTO.cs
+│       ├── ...
+│   ├── Program.cs
+│   ├── Admin.Api.csproj
+│   ├── dockerfile
+│   ├── ...
+│
+├── Aggregator.Api/
+│   └── Controllers/
+│       ├── CompositeController.cs
+│       ├── ...
+│   └── DTOs/
+│       ├── CompositeLocationSportDTO.cs
+│       ├── ...
+│   ├── Program.cs
+│   ├── Aggregator.Api.csproj
+│   ├── dockerfile
+│   ├── ...
+│
+├── Fullness.Api/
+│   └── Controllers/
+│       ├── FullnessController.cs
+│       ├── ...
+│   └── Data/
+│       ├── FullnessDbContext.cs
+│       ├── ...
+│   └── Models/
+│       ├── Fullness.cs
+│       ├── ...
+│   └── Queries/
+│       ├── FullnessQuery.cs
+│       ├── ...
+│   ├── Program.cs
+│   ├── Fullness.Api.csproj
+│   ├── dockerfile
+│   ├── ...
+│
+├── Location.Api/
+│   └── Controllers/
+│       ├── LocationController.cs
+│       ├── ...
+│   └── Data/
+│       ├── LocationDbContext.cs
+│       ├── ...
+│   └── Models/
+│       ├── Location.cs
+│       ├── ...
+│   └── Queries/
+│       ├── LocationQuery.cs
+│       ├── ...
+│   └── DTOs/
+│       ├── LocationDTO.cs
+│       ├── ...
+│   ├── Program.cs
+│   ├── Location.Api.csproj
+│   ├── dockerfile
+│   ├── ...
+│
+├── Sport.Api/
+│   └── Controllers/
+│       ├── SportController.cs
+│       ├── ...
+│   └── Data/
+│       ├── SportDbContext.cs
+│       ├── ...
+│   └── Models/
+│       ├── Sport.cs
+│       ├── ...
+│   └── Queries/
+│       ├── SportQuery.cs
+│       ├── ...
+│   └── DTOs/
+│       ├── SportDTO.cs
+│       ├── ...
+│   ├── Program.cs
+│   ├── Sport.Api.csproj
+│   ├── dockerfile
+│   ├── ...
+│
+├── PlaySpotApi.Tests/
+│   ├── SampleVenueTests.cs                # Basic xUnit test
+│   ├── PlaySpotApi.Tests.csproj
+│
+├── deprecated/PlaySpotApi (DEPRECATED)/
 │   └── Data/
 │       ├── PlaySpotDbContext.cs
 │       ├── ...
@@ -50,12 +142,9 @@ play-spot_backend/
 │   ├── dockerfile
 │   ├── ...
 │
-├── PlaySpotApi.Tests/
-│   ├── SampleVenueTests.cs                # Basic xUnit test
-│   ├── PlaySpotApi.Tests.csproj
-│
 ├── .gitignore
 ├── cleanup.sh
 ├── dev.sh
-├── PlaySpotBackend.sln                     # Solution file
+├── docker-compose.yml
+├── PlaySpot.sln (DEPRECATED)                     # Solution file
 ├── README.md```
