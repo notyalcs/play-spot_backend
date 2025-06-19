@@ -19,7 +19,7 @@ public class FullnessTests : IClassFixture<FullnessWebApplicationFactory>
         var fullness = new Fullness.Api.Models.Fullness
         {
             LocationId = 1,
-            FullnessLevel = Fullness.Api.Enums.FullnessLevel.Crowded,            
+            FullnessLevel = Fullness.Api.Enums.FullnessLevel.Crowded,
         };
 
         // Act
@@ -28,5 +28,23 @@ public class FullnessTests : IClassFixture<FullnessWebApplicationFactory>
         // Assert
         response.EnsureSuccessStatusCode();
         Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task PostFullness_MissingLocationId_ReturnsBadRequest()
+    {
+        // Arrange
+        var fullness = new Fullness
+        {
+            LocationId = 0, // Invalid
+            FullnessLevel = FullnessLevel.Moderate
+        };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/Fullness", fullness);
+
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+        Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
     }
 }
